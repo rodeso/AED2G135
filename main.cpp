@@ -1,6 +1,7 @@
 #include "include/Controller.h"
 
 int main() {
-    Controller::run();
+    Controller _;
+    _.displayMenu();
     return 0;
 }

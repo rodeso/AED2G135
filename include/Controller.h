@@ -18,8 +18,17 @@
 using namespace std;
 
 class Controller {
+private:
+    vector<Airport> airports;
+    vector<Airline> airlines;
+    vector<Flight> flights;
+    Graph<Airport> g;
 public:
-    static int run();
+    Controller();
+    void displayMenu();
+    void numAirports();
+    void numAirlines();
+    void displayCredits();
 };
 
 
