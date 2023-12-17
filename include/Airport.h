@@ -19,6 +19,9 @@ public:
     Airport();  // Default constructor
     Airport(const string& code, const string& name, const string& city, const string& country, double latitude, double longitude);
 
+    bool operator==(const Airport& other) const {
+        return (code == other.code);
+    }
     // Getters
     string getCode() const;
     string getName() const;

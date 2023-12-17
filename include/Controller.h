@@ -19,7 +19,7 @@ using namespace std;
 
 class Controller {
 public:
-    static int startController();
+    static int run();
 };
 
 

@@ -8,19 +8,25 @@ using namespace std;
 
 class Flight {
 private:
+    int id;
+    static int nextId;
     Airport sourceAirport;
     Airport targetAirport;
     Airline airline;
 
 public:
     //Constructor
-    Flight(const Airport& source, const Airport& target, const Airline& airline);
+    Flight(Airport  source, Airport  target, Airline  airline);
 
     //Getters
     const Airport& getSourceAirport() const;
     const Airport& getTargetAirport() const;
     const Airline& getAirline() const;
+    double getDistance() const;
+    int getid() const;
+    string ticket() const;
 
+    long getid();
 };
 
 

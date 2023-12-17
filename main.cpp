@@ -1,7 +1,6 @@
 #include "include/Controller.h"
 
 int main() {
-    cout << "Hello World!";
-    Controller::startController();
+    Controller::run();
     return 0;
 }
