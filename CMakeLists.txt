@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(AED2G135
         main.cpp
-        src/controller.cpp
         include/Graph.h
         src/Airport.cpp
         include/Airport.h

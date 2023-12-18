@@ -54,11 +54,13 @@ Controller::Controller() {
 
 // Main menu function
 void Controller::displayMenu() {
-    int choice;
+    int choice, i, ii, iii;
+    int n, m;
     string source, destination;
-    string airport;
+    string airport, airline;
     vector<Airport> res;
     Airport chosen;
+    Airline cho;
 
     while (true) {
         cout <<"\n===== Airport Management System =====\n ";
@@ -77,8 +79,7 @@ void Controller::displayMenu() {
         cin >> choice;
 
         switch (choice) {
-            case 1:
-                int i;
+            case 1: {
                 while (true) {
                     cout << "\n========= General Statistics ========\n ";
                     cout << "1. Number of Airports\n ";
@@ -108,9 +109,9 @@ void Controller::displayMenu() {
                     }
                 }
                 break;
-            case 2:
+            }
+            case 2: {
                 //Choose Airport
-                int n;
                 cout << "Enter Airport Code or City: ";
                 cin >> airport;
                 if (airport.size() > 3) {
@@ -123,15 +124,17 @@ void Controller::displayMenu() {
                     }
                     cout << "\n========= Airport(s) Found ========\n ";
                     cout << "             ";
-                    for (auto a : res) {
+                    for (auto a: res) {
                         cout << a.getCode();
                     }
-                    if (res.size()==1) { chosen = res[0]; cout << "\n=====================================\n"; }
-                    else {
+                    if (res.size() == 1) {
+                        chosen = res[0];
+                        cout << "\n=====================================\n";
+                    } else {
                         cout << "\n                Choose One";
                         cout << "\n=====================================\n";
                         cin >> n;
-                        while (n>=res.size()) {
+                        while (n >= res.size()) {
                             cout << "Invalid Number, please try again!\n";
                             cin >> n;
                         }
@@ -145,8 +148,8 @@ void Controller::displayMenu() {
                         chosen = airportIter->second;
                     }
                 }
-                cout << chosen.getCode() << " Airport, in " << chosen.getCity() << ", " << chosen.getCountry() << " was Selected!\n";
-                int ii;
+                cout << chosen.getCode() << " Airport, in " << chosen.getCity() << ", " << chosen.getCountry()
+                     << " was Selected!\n";
                 while (true) {
                     cout << "\n========= Airport Statistics ========\n ";
                     cout << "1. Number of Airports\n ";
@@ -173,18 +176,104 @@ void Controller::displayMenu() {
                     }
                 }
                 break;
-            case 3:
+            }
+            case 3: {
+                //Choose Airline
+                cout << "Enter Airline Code: ";
+                cin >> airline;
+                auto airlineIter = airlineHashTable.find(airline);
+                if (airlineIter != airlineHashTable.end()) {
+                    cho = airlineIter->second;
+                }
+                cout << "\n========= Airline Found ========\n ";
+                cout << "             " << cho.getCallsign();
+                cout << "\n=====================================\n";
 
 
+                cout << cho.getName() << " was Selected!\n";
+                while (true) {
+                    cout << "\n========= Airline Statistics ========\n ";
+                    cout << "1. \n ";
+                    cout << "2. \n ";
+                    cout << "3. \n ";
+                    cout << "4. \n ";
+                    cout << "0. Go Back ";
+                    cout << "\n=====================================\n";
+                    cin >> iii;
+                    if (iii == 0) {
+                        cout << "Returning to the Main Menu!\n";
+                        break;
+                    }
+                    switch (iii) {
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        default:
+                            cout << "Invalid choice. Please try again.\n";
+                            break;
+                    }
+                }
                 break;
+            }
+            case 4: {
+                //Choose Flight //TODO
+                /*
+                cout << "Enter Airline Code: ";
+                cin >> airline;
+                auto airlineIter = airlineHashTable.find(airline);
+                if (airlineIter != airlineHashTable.end()) {
+                    cho = airlineIter->second;
+                }
+                cout << "\n========= Airline Found ========\n ";
+                cout << "             " << cho.getCallsign();
+                cout << "\n=====================================\n";
+
+
+                cout << cho.getName() << " was Selected!\n";
+                while (true) {
+                    cout << "\n========= Airline Statistics ========\n ";
+                    cout << "1. \n ";
+                    cout << "2. \n ";
+                    cout << "3. \n ";
+                    cout << "4. \n ";
+                    cout << "0. Go Back ";
+                    cout << "\n=====================================\n";
+                    cin >> iii;
+                    if (iii == 0) {
+                        cout << "Returning to the Main Menu!\n";
+                        break;
+                    }
+                    switch (iii) {
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        default:
+                            cout << "Invalid choice. Please try again.\n";
+                            break;
+                    }
+                }
+                break;
+                 */
+            }
+
             case 9:
                 displayCredits();
                 break;
             case 0:
-                cout << "Exiting the program.\n";
+                cout << "Exiting the program. Thank you for using our Software!\n";
                 return;
             default:
-                cout << "Invalid choice. Please enter a number between 1 and 4.\n";
+                cout << "Invalid choice. Please try again.\n";
                 break;
         }
 
