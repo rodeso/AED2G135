@@ -22,12 +22,23 @@ private:
     vector<Airport> airports;
     vector<Airline> airlines;
     vector<Flight> flights;
+    unordered_map<string, Airport> airportHashTable;
+    unordered_map<string, vector<Airport>> cityHashTable;
+    unordered_map<string, Airline> airlineHashTable;
+    void addAirportToHashTable(const Airport& airport) {
+        airportHashTable[airport.getCode()] = airport;
+        cityHashTable[airport.getCity()].push_back(airport);
+    }
+    void addAirlineToHashTable(const Airline& airline) {
+        airlineHashTable[airline.getCode()] = airline;
+    }
     Graph<Airport> g;
 public:
     Controller();
     void displayMenu();
     void numAirports();
     void numAirlines();
+    void numFlights();
     void displayCredits();
 };
 

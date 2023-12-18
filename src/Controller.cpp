@@ -10,10 +10,11 @@ Controller::Controller() {
 
     // Parse airports
     airports = CSVParser::parseAirports(airportsFile);
-
+    for (auto x : airports) addAirportToHashTable(x);
     // Parse airlines
     airlines = CSVParser::parseAirlines(airlinesFile);
     airlines.erase(airlines.begin());
+    for (auto y : airlines) addAirlineToHashTable(y);
     cout << "Loading Data...\n";
     // Parse flights using the previously parsed airports and airlines
     flights = CSVParser::parseFlights(flightsFile, airports, airlines);
@@ -55,6 +56,9 @@ Controller::Controller() {
 void Controller::displayMenu() {
     int choice;
     string source, destination;
+    string airport;
+    vector<Airport> res;
+    Airport chosen;
 
     while (true) {
         cout <<"\n===== Airport Management System =====\n ";
@@ -74,19 +78,89 @@ void Controller::displayMenu() {
 
         switch (choice) {
             case 1:
+                int i;
+                while (true) {
+                    cout << "\n========= General Statistics ========\n ";
+                    cout << "1. Number of Airports\n ";
+                    cout << "2. Number of Airlines\n ";
+                    cout << "3. Number of Flights\n ";
+                    cout << "4. \n ";
+                    cout << "0. Go Back ";
+                    cout << "\n=====================================\n";
+                    cin >> i;
+                    if (i == 0) {
+                        cout << "Returning to the Main Menu!\n";
+                        break;
+                    }
+                    switch (i) {
+                        case 1:
+                            numAirports();
+                            break;
+                        case 2:
+                            numAirlines();
+                            break;
+                        case 3:
+                            numFlights();
+                            break;
+                        default:
+                            cout << "Invalid choice. Please try again.\n";
+                            break;
+                    }
+                }
+                break;
+            case 2:
+                //Choose Airport
+                int n;
+                cout << "Enter Airport Code or City: ";
+                cin >> airport;
+                if (airport.size() > 3) {
+                    auto cityIter = cityHashTable.find(airport);
+
+                    if (cityIter != cityHashTable.end()) {
+                        res = cityIter->second;
+                    } else {
+                        res = {};
+                    }
+                    cout << "\n========= Airport(s) Found ========\n ";
+                    cout << "             ";
+                    for (auto a : res) {
+                        cout << a.getCode();
+                    }
+                    if (res.size()==1) { chosen = res[0]; cout << "\n=====================================\n"; }
+                    else {
+                        cout << "\n                Choose One";
+                        cout << "\n=====================================\n";
+                        cin >> n;
+                        while (n>=res.size()) {
+                            cout << "Invalid Number, please try again!\n";
+                            cin >> n;
+                        }
+                        chosen = res[n];
+                    }
+
+                } else {
+                    auto airportIter = airportHashTable.find(airport);
+
+                    if (airportIter != airportHashTable.end()) {
+                        chosen = airportIter->second;
+                    }
+                }
+                cout << chosen.getCode() << " Airport, in " << chosen.getCity() << ", " << chosen.getCountry() << " was Selected!\n";
+                int ii;
                 while (true) {
                     cout << "\n========= Airport Statistics ========\n ";
                     cout << "1. Number of Airports\n ";
                     cout << "2. Number of Airlines\n ";
                     cout << "3. Number of Flights\n ";
-                    cout << "3. \n ";
+                    cout << "4. \n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
-                    cin >> choice;
-                    if (choice == 0) {
+                    cin >> ii;
+                    if (ii == 0) {
+                        cout << "Returning to the Main Menu!\n";
                         break;
                     }
-                    switch (choice) {
+                    switch (ii) {
                         case 1:
                             numAirports();
                             break;
@@ -99,14 +173,8 @@ void Controller::displayMenu() {
                     }
                 }
                 break;
-            case 2:
-
-                break;
             case 3:
-                cout << "Enter source airport code: ";
-                cin >> source;
-                cout << "Enter destination airport code: ";
-                cin >> destination;
+
 
                 break;
             case 9:
@@ -134,7 +202,12 @@ void Controller::numAirports() {
 }
 void Controller::numAirlines() {
     unsigned long n = airlines.size();
-    cout << "\n=========== Airport Count ===========\n";
+    cout << "\n=========== Airline Count ===========\n";
+    cout << "                " << n << "\n=====================================\n";
+}
+void Controller::numFlights() {
+    unsigned long n = flights.size();
+    cout << "\n=========== Flight Count ===========\n";
     cout << "                " << n << "\n=====================================\n";
 }
 void Controller::displayCredits() {
