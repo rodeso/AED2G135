@@ -11,6 +11,6 @@ Yet Another AirRoute Navigator (YAARN)
 - **Course:** [AED](https://sigarra.up.pt/feup/pt/UCURR_GERAL.FICHA_UC_VIEW?pv_ocorrencia_id=520316) (Algorithms and Data Structures)
 - **Project grade:** TBD
 - **Group members:**
-    - Álvaro Luís Dias Amaral Alvim Torres (up202208954@up.pt)
+    - Álvaro Tomas Teixeira Silva Pacheco (up202207733@up.pt)
     - André Pinto de Sousa (up202109775@up.pt)
     - Rodrigo Dias Ferreira Loureiro de Sousa (up202205751@up.pt)
