@@ -5,6 +5,12 @@
 
 int Flight::nextId = 0;
 
+Flight::Flight() {
+    id = 0;
+    sourceAirport = Airport();
+    targetAirport = Airport();
+    airline = Airline();
+}
 Flight::Flight(Airport  source, Airport  target, Airline  airline)
         : sourceAirport(std::move(source)), targetAirport(std::move(target)), airline(std::move(airline)), id(nextId++) {}
 
@@ -25,10 +31,10 @@ int Flight::getid() const {
 }
 string Flight::ticket() const {
     stringstream ticketInfo;
-    ticketInfo << "Flight Ticket for Flight: " << id << endl;
-    ticketInfo << "Source Airport: " << sourceAirport.getCode() << " - " << sourceAirport.getName() << "\n";
-    ticketInfo << "Destination Airport: " << targetAirport.getCode() << " - " << targetAirport.getName() << "\n";
-    ticketInfo << "Airline: " << airline.getCode() << " - " << airline.getName() << "\n";
+    ticketInfo << " Flight Ticket for Flight: " << id << endl;
+    ticketInfo << " Source Airport: " << sourceAirport.getCode() << " - " << sourceAirport.getName() << "\n";
+    ticketInfo << " Destination Airport: " << targetAirport.getCode() << " - " << targetAirport.getName() << "\n";
+    ticketInfo << " Airline: " << airline.getCode() << " - " << airline.getName();
     return ticketInfo.str();
 }
 //Haversine formula
@@ -53,5 +59,7 @@ double Flight::getDistance() const {
     double distance = R * c;
     return distance;
 }
+
+
 
 

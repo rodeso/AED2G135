@@ -60,7 +60,9 @@ void Controller::displayMenu() {
     string airport, airline;
     vector<Airport> res;
     Airport chosen;
+    Airport chosen2;
     Airline cho;
+    Flight flosen;
 
     while (true) {
         cout <<"\n===== Airport Management System =====\n ";
@@ -147,15 +149,16 @@ void Controller::displayMenu() {
                     if (airportIter != airportHashTable.end()) {
                         chosen = airportIter->second;
                     }
+                    else {cout << "Airport Not Found!\n"; break;}
                 }
                 cout << chosen.getCode() << " Airport, in " << chosen.getCity() << ", " << chosen.getCountry()
                      << " was Selected!\n";
                 while (true) {
                     cout << "\n========= Airport Statistics ========\n ";
-                    cout << "1. Number of Airports\n ";
-                    cout << "2. Number of Airlines\n ";
-                    cout << "3. Number of Flights\n ";
-                    cout << "4. \n ";
+                    cout << "1. Number of Departing Flights\n ";
+                    cout << "2. Number of Arriving Flights\n ";
+                    cout << "3. Possible Direct Destinations\n ";
+                    cout << "4. Find Flight To\n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
                     cin >> ii;
@@ -165,10 +168,13 @@ void Controller::displayMenu() {
                     }
                     switch (ii) {
                         case 1:
-                            numAirports();
+                            numDepartures(chosen);
                             break;
                         case 2:
-                            numAirlines();
+                            numArrivals(chosen);
+                            break;
+                        case 3:
+                            showDestinations(chosen);
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
@@ -185,6 +191,7 @@ void Controller::displayMenu() {
                 if (airlineIter != airlineHashTable.end()) {
                     cho = airlineIter->second;
                 }
+                else {cout << "Airline Not Found!\n"; break;}
                 cout << "\n========= Airline Found ========\n ";
                 cout << "             " << cho.getCallsign();
                 cout << "\n=====================================\n";
@@ -222,21 +229,50 @@ void Controller::displayMenu() {
             }
             case 4: {
                 //Choose Flight //TODO
-                /*
+                cout << "Enter Source Airport Code: ";
+                cin >> source;
+                auto airsource = airportHashTable.find(source);
+                if (airsource != airportHashTable.end()) {
+                    chosen = airsource->second;
+                }
+                else {cout << "Airport Not Found!\n"; break;}
+                cout << "Enter Destination Airport Code: ";
+                cin >> destination;
+                auto airdest = airportHashTable.find(destination);
+                if (airdest != airportHashTable.end()) {
+                    chosen2 = airdest->second;
+                }
+                else {cout << "Airport Not Found!\n"; break;}
                 cout << "Enter Airline Code: ";
                 cin >> airline;
                 auto airlineIter = airlineHashTable.find(airline);
                 if (airlineIter != airlineHashTable.end()) {
                     cho = airlineIter->second;
                 }
-                cout << "\n========= Airline Found ========\n ";
-                cout << "             " << cho.getCallsign();
-                cout << "\n=====================================\n";
+                else {cout << "Airline Not Found!\n"; break;}
+                auto v = g.findVertex(chosen);
+                bool flightFound = false;
+                for (auto u : v->getAdj()) {
+                    if (u.getDest()->getInfo() == chosen2 && u.getAirline() == cho) {
+                        flightFound = true;
+                    }
+                }
+                if (flightFound) {
+                    for (auto f: flights) {
+                        if (f.getAirline() == cho && f.getTargetAirport() == chosen2 &&
+                            f.getSourceAirport() == chosen)
+                            flosen = f;
+                    }
+                    cout << "\n============ Flight Found ===========\n";
+                    cout << flosen.ticket();
+                    cout << "\n=====================================\n";
+                } else {
+                    cout << "No Flight was Found!\n";
+                }
 
 
-                cout << cho.getName() << " was Selected!\n";
                 while (true) {
-                    cout << "\n========= Airline Statistics ========\n ";
+                    cout << "\n========= Flight Statistics ========\n ";
                     cout << "1. \n ";
                     cout << "2. \n ";
                     cout << "3. \n ";
@@ -263,7 +299,6 @@ void Controller::displayMenu() {
                     }
                 }
                 break;
-                 */
             }
 
             case 9:
@@ -279,7 +314,7 @@ void Controller::displayMenu() {
 
         // Clear the input buffer to prevent infinite loop on invalid input
         cin.clear();
-        sleep(5);
+        sleep(3);
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
@@ -298,6 +333,33 @@ void Controller::numFlights() {
     unsigned long n = flights.size();
     cout << "\n=========== Flight Count ===========\n";
     cout << "                " << n << "\n=====================================\n";
+}
+void Controller::numDepartures(Airport a) {
+    unsigned long n = 0;
+    auto v = g.findVertex(a);
+    for (auto u : v->getAdj()) {
+        n++;
+    }
+    cout << "\n========= Departures Count =========\n";
+    cout << "                " << n << "\n=====================================\n";
+}
+void Controller::numArrivals(Airport a) {
+    unsigned long n = 0;
+    for (auto v : g.getVertexSet()) {
+        for (auto u : v->getAdj()) {
+            if (u.getDest()->getInfo() == a)
+                n++;
+        }
+    }
+    cout << "\n========== Arrivals Count ==========\n";
+    cout << "                " << n << "\n=====================================\n";
+}
+void Controller::showDestinations(Airport a) {
+    cout << "\n============ Destinations ==========\n ";
+    auto v = g.findVertex(a);
+    for (auto u : v->getAdj()) {
+        cout << u.getDest()->getInfo().getCity() << ", " << u.getDest()->getInfo().getCountry() << " (" << u.getDest()->getInfo().getCode() << ")\n ";
+    }
 }
 void Controller::displayCredits() {
     cout << "\n=============== Credits ============= \n";

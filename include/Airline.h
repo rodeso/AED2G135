@@ -17,7 +17,9 @@ public:
     // Constructors
     Airline();  // Default constructor
     Airline(const string& code, const string& name, const string& callsign, const string& country);
-
+    bool operator==(const Airline& other) const {
+        return (code == other.code);
+    }
     // Getters
     string getCode() const;
     string getName() const;

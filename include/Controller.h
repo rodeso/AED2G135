@@ -39,6 +39,9 @@ public:
     void numAirports();
     void numAirlines();
     void numFlights();
+    void numDepartures(Airport a);
+    void numArrivals(Airport a);
+    void showDestinations(Airport a);
     void displayCredits();
 };
 

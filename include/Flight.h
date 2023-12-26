@@ -16,6 +16,7 @@ private:
 
 public:
     //Constructor
+    Flight();
     Flight(Airport  source, Airport  target, Airline  airline);
 
     //Getters
