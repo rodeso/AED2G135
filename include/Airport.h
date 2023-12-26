@@ -22,6 +22,9 @@ public:
     bool operator==(const Airport& other) const {
         return (code == other.code);
     }
+    bool operator<(const Airport& other) const {
+        return code < other.code;
+    }
     // Getters
     string getCode() const;
     string getName() const;

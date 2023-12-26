@@ -6,6 +6,8 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+#include <set>
+#include <unordered_set>
 #include <algorithm>
 #include <limits>
 #include <queue>
@@ -32,6 +34,7 @@ private:
     void addAirlineToHashTable(const Airline& airline) {
         airlineHashTable[airline.getCode()] = airline;
     }
+    void BFSWithLayovers(const Airport& source, const Airport& destination, int maxLayovers);
     Graph<Airport> g;
 public:
     Controller();
@@ -43,6 +46,7 @@ public:
     void numArrivals(Airport a);
     void showDestinations(Airport a);
     void showFlights(Airport a);
+    void numAirlineFlights(Airline a);
     void displayCredits();
 };
 
