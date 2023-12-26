@@ -176,6 +176,10 @@ void Controller::displayMenu() {
                         case 3:
                             showDestinations(chosen);
                             break;
+                        case 4:
+                            showFlights(chosen);
+                            break;
+
                         default:
                             cout << "Invalid choice. Please try again.\n";
                             break;
@@ -228,7 +232,7 @@ void Controller::displayMenu() {
                 break;
             }
             case 4: {
-                //Choose Flight //TODO
+                //Choose Flight
                 cout << "Enter Source Airport Code: ";
                 cin >> source;
                 auto airsource = airportHashTable.find(source);
@@ -340,7 +344,7 @@ void Controller::numDepartures(Airport a) {
     for (auto u : v->getAdj()) {
         n++;
     }
-    cout << "\n========= Departures Count =========\n";
+    cout << "\n========== Departures Count =========\n";
     cout << "                " << n << "\n=====================================\n";
 }
 void Controller::numArrivals(Airport a) {
@@ -351,15 +355,37 @@ void Controller::numArrivals(Airport a) {
                 n++;
         }
     }
-    cout << "\n========== Arrivals Count ==========\n";
+    cout << "\n=========== Arrivals Count ==========\n";
     cout << "                " << n << "\n=====================================\n";
 }
 void Controller::showDestinations(Airport a) {
-    cout << "\n============ Destinations ==========\n ";
+    cout << "\n============ Destinations ===========\n ";
     auto v = g.findVertex(a);
     for (auto u : v->getAdj()) {
         cout << u.getDest()->getInfo().getCity() << ", " << u.getDest()->getInfo().getCountry() << " (" << u.getDest()->getInfo().getCode() << ")\n ";
     }
+    cout << "\n=====================================\n";
+}
+void Controller::showFlights(Airport a) {
+    string destination;
+    Airport dest;
+    cout << "Enter Destination Airport Code: ";
+    cin >> destination;
+    auto airdest = airportHashTable.find(destination);
+    if (airdest != airportHashTable.end()) {
+        dest = airdest->second;
+    }
+    else {cout << "Airport Not Found!\n";
+        return;}
+    auto v1 = g.findVertex(a);
+    auto v2 = g.findVertex(dest);
+    cout << "\n=========== Direct Flights ==========\n ";
+    for (auto u : v1->getAdj()) {
+        if (u.getDest() == v2){
+            cout << "                " << u.getAirline().getCode() << "\n ";
+        }
+    }
+    cout << "=====================================\n";
 }
 void Controller::displayCredits() {
     cout << "\n=============== Credits ============= \n";
