@@ -64,7 +64,7 @@ template <class T>
 class Edge {
     Vertex<T> * dest;      // destination vertex
     double weight;         // edge weight
-    Airline airline;             // airline
+    Airline airline;       // airline
 public:
     Edge(Vertex<T> *d, double w, Airline a);
     Vertex<T> *getDest() const;
