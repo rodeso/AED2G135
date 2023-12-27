@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['low_0',['low',['../class_vertex.html#a35d937c418952520cfa26b098e86b755',1,'Vertex']]]
+  ['indegree_0',['indegree',['../class_vertex.html#ab29ac1b694fc673ba26cfc6d3e9bda13',1,'Vertex']]]
 ];

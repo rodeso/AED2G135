@@ -38,32 +38,54 @@ using namespace std;
 
 class Controller {
 private:
+    /// Initial Data Structure for Data in airports.csv
     vector<Airport> airports;
+    /// Initial Data Structure for Data in airports.csv
     vector<Airline> airlines;
+    /// Initial Data Structure for Data in flights.csv
     vector<Flight> flights;
+    /// Data Structure for Airports with Constant Look-up Time
     unordered_map<string, Airport> airportHashTable;
+    /// Data Structure for Cities with Constant Look-up Time
     unordered_map<string, vector<Airport>> cityHashTable;
+    /// Data Structure for Airlines with Constant Look-up Time
     unordered_map<string, Airline> airlineHashTable;
+
+    /// Simple HashTable Creation Method
     void addAirportToHashTable(const Airport& airport) {
         airportHashTable[airport.getCode()] = airport;
         cityHashTable[airport.getCity()].push_back(airport);
     }
+    /// Simple HashTable Creation Method
     void addAirlineToHashTable(const Airline& airline) {
         airlineHashTable[airline.getCode()] = airline;
     }
+    /// Simple Auxiliary Function for showFlights Function
     void BFSWithLayovers(const Airport& source, const Airport& destination, int maxLayovers);
+    /// Main Data Structure for the Program
     Graph<Airport> g;
 public:
+    /// Default Constructor
     Controller();
+    /// Program's Centre Function
     void displayMenu();
+    /// Calculates the Total Airport Number
     void numAirports();
+    /// Calculates the Total Airline Number
     void numAirlines();
+    /// Calculates the Total Flight Number
     void numFlights();
+    /// Calculates the Departing Flights Number from a given Airport
     void numDepartures(Airport a);
+    /// Calculates the Arriving Flights Number to a given Airport
     void numArrivals(Airport a);
+    /// Shows all Possible Destinations from a given Airport
     void showDestinations(Airport a);
+    /// Shows the Possible Flights from a given Airport to a chosen Airport
     void showFlights(Airport a);
+    /// Shows the Number of Flights a given Airline flies
     void numAirlineFlights(Airline a);
+    /// Simple Credits
     void displayCredits();
 };
 

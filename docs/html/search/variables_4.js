@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['num_0',['num',['../class_vertex.html#aeb941bcd51ef71c6101e02eaed1cae12',1,'Vertex']]]
+  ['g_0',['g',['../class_controller.html#a48bb0c0f8c215c541282bdd06e2f7729',1,'Controller']]]
 ];
