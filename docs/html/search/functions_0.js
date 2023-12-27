@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dfsisdag_0',['dfsIsDAG',['../class_graph.html#a06743c0b3e219cfeefa5aade38556cb7',1,'Graph']]]
+  ['addedge_0',['addEdge',['../class_vertex.html#ab0d0d2939529848bbc963c4493347a25',1,'Vertex']]]
 ];

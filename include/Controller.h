@@ -1,3 +1,20 @@
+/*! \mainpage Main Page
+ * - **Project name:** AED2G135 - Yet Another AirRoute Navigator (YAARN)
+ * - **Short description:** Console-based Air Travel Flight Management System
+ * - **Environment:** Unix/Windows console
+ * - **Tools:** C++
+ * - **Institution:** [FEUP](https://sigarra.up.pt/feup/en/web_page.Inicial)
+ * - **Course:** [AED](https://sigarra.up.pt/feup/pt/UCURR_GERAL.FICHA_UC_VIEW?pv_ocorrencia_id=520316) (Algorithms and Data Structures)
+ * - **Project grade:** TBD
+ * - **Group members:**
+ *   - Álvaro Tomas Teixeira Silva Pacheco (up202207733@up.pt)
+ *   - André Pinto de Sousa (up202109775@up.pt)
+ *   - Rodrigo Dias Ferreira Loureiro de Sousa (up202205751@up.pt)
+ *
+ */
+
+
+
 #ifndef AED2G135_CONTROLLER_H
 #define AED2G135_CONTROLLER_H
 

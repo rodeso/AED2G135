@@ -24,13 +24,13 @@ template <class T> class Vertex;
 
 template <class T>
 class Vertex {
-    T info;                // contents
-    vector<Edge<T> > adj;  // list of outgoing edges
-    bool visited;          // auxiliary field
-    bool processing;       // auxiliary field
-    int indegree;          // auxiliary field
-    int num;               // auxiliary field
-    int low;               // auxiliary field
+    T info;                /// contents
+    vector<Edge<T> > adj;  /// list of outgoing edges
+    bool visited;          /// auxiliary field
+    bool processing;       /// auxiliary field
+    int indegree;          /// auxiliary field
+    int num;               /// auxiliary field
+    int low;               /// auxiliary field
 
     void addEdge(Vertex<T> *dest, double w, Airline a);
     bool removeEdgeTo(Vertex<T> *d);
@@ -62,9 +62,9 @@ public:
 
 template <class T>
 class Edge {
-    Vertex<T> * dest;      // destination vertex
-    double weight;         // edge weight
-    Airline airline;       // airline
+    Vertex<T> * dest;      /// destination vertex
+    double weight;         /// edge weight
+    Airline airline;       /// airline
 public:
     Edge(Vertex<T> *d, double w, Airline a);
     Vertex<T> *getDest() const;
@@ -79,10 +79,10 @@ public:
 
 template <class T>
 class Graph {
-    vector<Vertex<T> *> vertexSet;      // vertex set
-    int _index_;                        // auxiliary field
-    stack<Vertex<T>> _stack_;           // auxiliary field
-    list<list<T>> _list_sccs_;        // auxiliary field
+    vector<Vertex<T> *> vertexSet;      /// vertex vector
+    int _index_;                        /// auxiliary field
+    stack<Vertex<T>> _stack_;           /// auxiliary field
+    list<list<T>> _list_sccs_;          /// auxiliary field
 
     void dfsVisit(Vertex<T> *v,  vector<T> & res) const;
     bool dfsIsDAG(Vertex<T> *v) const;
