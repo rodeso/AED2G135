@@ -391,7 +391,7 @@ void Controller::displayMenu() {
 
                 while (true) {
                     cout << "\n========= Flight Statistics ========\n ";
-                    cout << "1. Distance\n "; //TODO
+                    cout << "1. Distance\n ";
                     cout << "2. \n ";
                     cout << "3. \n ";
                     cout << "4. \n ";
