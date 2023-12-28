@@ -79,7 +79,7 @@ public:
 
 template <class T>
 class Graph {
-    vector<Vertex<T> *> vertexSet;      /// vertex vector
+    set<Vertex<T> *> vertexSet;      /// vertex vector
     int _index_;                        /// auxiliary field
     stack<Vertex<T>> _stack_;           /// auxiliary field
     list<list<T>> _list_sccs_;          /// auxiliary field
@@ -93,7 +93,7 @@ public:
     bool removeVertex(const T &in);
     bool addEdge(const T &sourc, const T &dest, double w, Airline a);
     bool removeEdge(const T &sourc, const T &dest);
-    vector<Vertex<T> * > getVertexSet() const;
+    set<Vertex<T> * > getVertexSet() const;
     vector<T> dfs() const;
     vector<T> dfs(const T & source) const;
     vector<T> bfs(const T &source) const;
@@ -116,7 +116,7 @@ int Graph<T>::getNumVertex() const {
 }
 
 template <class T>
-vector<Vertex<T> * > Graph<T>::getVertexSet() const {
+set<Vertex<T> * > Graph<T>::getVertexSet() const {
     return vertexSet;
 }
 
@@ -239,7 +239,7 @@ template <class T>
 bool Graph<T>::addVertex(const T &in) {
     if ( findVertex(in) != NULL)
         return false;
-    vertexSet.push_back(new Vertex<T>(in));
+    vertexSet.insert(new Vertex<T>(in));
     return true;
 }
 

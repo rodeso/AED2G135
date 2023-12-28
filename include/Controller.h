@@ -62,6 +62,8 @@ private:
     }
     /// Simple Auxiliary Function for showFlights Function
     void BFSWithLayovers(const Airport& source, const Airport& destination, int maxLayovers);
+    /// Simple Auxiliary Function for findLongestPath function
+    void dfs(const Airport& current, std::vector<Airport>& currentPath, set<Airport>& visited, vector<Airport> longestPath);
     /// Main Data Structure for the Program
     Graph<Airport> g;
 public:
@@ -75,6 +77,8 @@ public:
     void numAirlines();
     /// Calculates the Total Flight Number
     void numFlights();
+    /// Shows the Trip with the most Stops
+    void findLongestPath();
     /// Shows Top X Airports with Most Flights (InDegree+OutDegree)
     void topAirports();
     /// Calculates the Departing Flights Number from a given Airport

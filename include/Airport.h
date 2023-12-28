@@ -34,6 +34,7 @@ public:
     bool operator<(const Airport& other) const {
         return code < other.code;
     }
+
     /// Returns 3 Character Code
     string getCode() const;
     /// Returns Full Name

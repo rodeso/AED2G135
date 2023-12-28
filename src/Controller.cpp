@@ -87,7 +87,7 @@ void Controller::displayMenu() {
                     cout << "1. Number of Airports\n ";
                     cout << "2. Number of Airlines\n ";
                     cout << "3. Number of Flights\n ";
-                    cout << "4. Longest Trip\n "; //TODO (7) (Most Stops)
+                    cout << "4. Longest Trip\n "; //TODO (7) (Most Stops) (CRASHES)
                     cout << "5. Top X Airports\n ";
                     cout << "6. Essential Airports\n "; //TODO (9) (Bridge)
                     cout << "0. Go Back ";
@@ -109,6 +109,10 @@ void Controller::displayMenu() {
                             break;
                         case 3:
                             numFlights();
+                            sleep(3);
+                            break;
+                        case 4:
+                            findLongestPath();
                             sleep(3);
                             break;
                         case 5:
@@ -314,7 +318,7 @@ void Controller::displayMenu() {
 
                 while (true) {
                     cout << "\n========= Flight Statistics ========\n ";
-                    cout << "1. Distance\n "; //TODO
+                    cout << "1. Distance\n ";
                     cout << "2. \n ";
                     cout << "3. \n ";
                     cout << "4. \n ";
@@ -395,7 +399,7 @@ void Controller::displayMenu() {
 
                 while (true) {
                     cout << "\n========= Flight Statistics ========\n ";
-                    cout << "1. Distance\n ";
+                    cout << "1. \n ";
                     cout << "2. \n ";
                     cout << "3. \n ";
                     cout << "4. \n ";
@@ -461,7 +465,43 @@ void Controller::numFlights() {
     cout << "\n=========== Flight Count ===========\n";
     cout << "                " << n << "\n=====================================\n";
 }
+void Controller::findLongestPath() {
+    vector<Airport> longestPath;
+    set<Airport> visited;
 
+    for (const auto& vertex : g.getVertexSet()) {
+        if (visited.find(vertex->getInfo()) == visited.end()) {
+            std::vector<Airport> currentPath;
+            dfs(vertex->getInfo(), currentPath, visited, longestPath);
+        }
+    }
+
+    // Now, 'longestPath' contains the longest path found
+    std::cout << "Longest Path: ";
+    for (const auto& airport : longestPath) {
+        std::cout << airport.getCode() << " -> ";
+    }
+    std::cout << "\n";
+}
+
+void Controller::dfs(const Airport& current, std::vector<Airport>& currentPath, set<Airport>& visited, vector<Airport> longestPath) {
+    visited.insert(current);
+    currentPath.push_back(current);
+
+    for (const auto& neighbor : g.findVertex(current)->getAdj()) {
+        if (visited.find(neighbor.getDest()->getInfo()) == visited.end()) {
+            dfs(neighbor.getDest()->getInfo(), currentPath, visited, longestPath);
+        }
+    }
+
+    if (currentPath.size() > longestPath.size()) {
+        longestPath = currentPath;
+    }
+
+    // Backtrack
+    visited.erase(current);
+    currentPath.pop_back();
+}
 void Controller::topAirports() {
     int x;
     cout << "X: ";
