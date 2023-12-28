@@ -17,10 +17,10 @@ Calculate and list statistics of the network, including existing airports and co
 are mandatory:
 
 1. [x] Global number of airports and number of available flights; 
-2. [ ] Number of flights out of an airport; and from how many different airlines; 
-3. [ ] Number of flights per city/airline; 
-4. [ ] Number of different countries that a given airport/city flies to; 
-5. [ ] Number of destinations (airports, cities or countries) available for a given airport; 
+2. [x] Number of flights out of an airport; and from how many different airlines; 
+3. [x] Number of flights per city/airline; 
+4. [x] Number of different countries that a given airport/city flies to; 
+5. [x] Number of destinations (airports, cities or countries) available for a given airport; 
 6. [ ] Number of reachable destinations (airports, cities or countries) from a given airport in a maximum number of X stops (lay-overs);
 7. [ ] Maximum trip and corresponding pair of source-destination airports (or pairs, if more than one), that is, the flight trip(s) with the greatest number of stops in between them;
 8. [ ] Identify the top-k airport with the greatest air traffic capacity, that is, with the greatest number of flights;

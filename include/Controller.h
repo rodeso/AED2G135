@@ -81,10 +81,18 @@ public:
     void numArrivals(Airport a);
     /// Shows all Possible Destinations from a given Airport
     void showDestinations(Airport a);
+    /// Shows all Possible Arrivals from a given Airport
+    void showArrivals(Airport a);
     /// Shows the Possible Flights from a given Airport to a chosen Airport
-    void showFlights(Airport a);
+    void showFlightsTo(Airport a);
+    /// Shows the Possible Flights from a chosen Airport to a given Airport
+    void showFlightsFrom(Airport a);
     /// Shows the Number of Flights a given Airline flies
     void numAirlineFlights(Airline a);
+    /// Shows the Number of Flights a given Airline flies from a chosen Airport
+    void numAirlineFlightsFrom(Airline a);
+    /// Shows the Number of Flights a given Airline flies to a chosen Airport
+    void numAirlineFlightsTo(Airline a);
     /// Simple Credits
     void displayCredits();
 };
