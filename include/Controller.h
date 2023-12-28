@@ -93,6 +93,8 @@ public:
     void numAirlineFlightsFrom(Airline a);
     /// Shows the Number of Flights a given Airline flies to a chosen Airport
     void numAirlineFlightsTo(Airline a);
+    /// Shows the Distance between the two Airports of the Flight
+    void showDistance(Flight f);
     /// Simple Credits
     void displayCredits();
 };

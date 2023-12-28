@@ -54,7 +54,7 @@ Controller::Controller() {
 
 // Main menu function
 void Controller::displayMenu() {
-    int choice, i, ii, iii;
+    int choice, i;
     int n, m;
     string source, destination;
     string airport, airline;
@@ -70,7 +70,7 @@ void Controller::displayMenu() {
         cout << "2. Airport Info\n ";
         cout << "3. Airline Info\n ";
         cout << "4. Flight Info\n ";
-        cout << "5. \n ";
+        cout << "5. Book a Flight\n "; //TODO (4) (Present the Best Flight Options)
         cout << "6. \n ";
         cout << "7. \n ";
         cout << "8. \n ";
@@ -88,7 +88,7 @@ void Controller::displayMenu() {
                     cout << "2. Number of Airlines\n ";
                     cout << "3. Number of Flights\n ";
                     cout << "4. Longest Trip\n "; //TODO (7) (Most Stops)
-                    cout << "5. Top X Airports\n"; //TODO (8) (In+Out Degree Max)
+                    cout << "5. Top X Airports\n "; //TODO (8) (In+Out Degree Max)
                     cout << "6. Essential Airports\n "; //TODO (9) (Bridge)
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
@@ -169,16 +169,16 @@ void Controller::displayMenu() {
                     cout << "4. Show Unique Arrivals\n ";
                     cout << "5. Find Airline with Flight To\n ";
                     cout << "6. Find Airline with Flight From\n ";
-                    cout << "7. Number of Possible Destinations\n " //TODO (6)
+                    cout << "7. Number of Possible Destinations\n "; //TODO (6)
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
-                    cin >> ii;
-                    if (ii == 0) {
+                    cin >> i;
+                    if (i == 0) {
                         cout << "Returning to the Main Menu!\n";
                         sleep(1);
                         break;
                     }
-                    switch (ii) {
+                    switch (i) {
                         case 1:
                             numDepartures(chosenSource);
                             sleep(3);
@@ -234,13 +234,13 @@ void Controller::displayMenu() {
                     cout << "5. Top X Airports (Arrivals)\n ";   //TODO
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
-                    cin >> iii;
-                    if (iii == 0) {
+                    cin >> i;
+                    if (i == 0) {
                         cout << "Returning to the Main Menu!\n";
                         sleep(1);
                         break;
                     }
-                    switch (iii) {
+                    switch (i) {
                         case 1:
                             numAirlineFlights(chosenAirline);
                             sleep(3);
@@ -316,13 +316,94 @@ void Controller::displayMenu() {
                     cout << "4. \n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
-                    cin >> iii;
-                    if (iii == 0) {
+                    cin >> i;
+                    if (i == 0) {
                         cout << "Returning to the Main Menu!\n";
                         sleep(1);
                         break;
                     }
-                    switch (iii) {
+                    switch (i) {
+                        case 1:
+                            showDistance(chosenFlight);
+                            sleep(3);
+                            break;
+                        case 2:
+                            sleep(3);
+                            break;
+                        case 3:
+                            sleep(3);
+                            break;
+                        case 4:
+                            sleep(3);
+                            break;
+                        default:
+                            cout << "Invalid choice. Please try again.\n";
+                            break;
+                    }
+                }
+                break;
+            }
+            case 5: {
+                //Choose Flight //TODO Airport City or Location (coordinates)
+                cout << "Enter Source Airport Code: ";
+                cin >> source;
+                auto airsource = airportHashTable.find(source);
+                if (airsource != airportHashTable.end()) {
+                    chosenSource = airsource->second;
+                }
+                else {cout << "Airport Not Found!\n"; break;}
+                cout << "Enter Destination Airport Code: ";
+                cin >> destination;
+                auto airdest = airportHashTable.find(destination);
+                if (airdest != airportHashTable.end()) {
+                    chosenDest = airdest->second;
+                }
+                else {cout << "Airport Not Found!\n"; break;}
+                cout << "Enter Airline Code: ";
+                cin >> airline;
+                auto airlineIter = airlineHashTable.find(airline);
+                if (airlineIter != airlineHashTable.end()) {
+                    chosenAirline = airlineIter->second;
+                }
+                else {cout << "Airline Not Found!\n"; sleep(1);break;}
+                auto v = g.findVertex(chosenSource);
+                bool flightFound = false;
+                for (auto u : v->getAdj()) {
+                    if (u.getDest()->getInfo() == chosenDest && u.getAirline() == chosenAirline) {
+                        flightFound = true;
+                    }
+                }
+                if (flightFound) {
+                    for (auto f: flights) {
+                        if (f.getAirline() == chosenAirline && f.getTargetAirport() == chosenDest &&
+                            f.getSourceAirport() == chosenSource)
+                            chosenFlight = f;
+                    }
+                    cout << "\n============ Flight Found ===========\n";
+                    cout << chosenFlight.ticket();
+                    cout << "\n=====================================\n";
+                } else {
+                    cout << "No Flight was Found!\n";
+                    sleep(1);
+                    break;
+                }
+
+
+                while (true) {
+                    cout << "\n========= Flight Statistics ========\n ";
+                    cout << "1. Distance\n "; //TODO
+                    cout << "2. \n ";
+                    cout << "3. \n ";
+                    cout << "4. \n ";
+                    cout << "0. Go Back ";
+                    cout << "\n=====================================\n";
+                    cin >> i;
+                    if (i == 0) {
+                        cout << "Returning to the Main Menu!\n";
+                        sleep(1);
+                        break;
+                    }
+                    switch (i) {
                         case 1:
                             sleep(3);
                             break;
@@ -665,11 +746,16 @@ void Controller::numAirlineFlightsTo(Airline a) {
         }
 
         cout << "\n======= Airline Flights Count =======\n";
-        cout << "                  " << numFlights << "\n";
-        cout << "=====================================\n";
+        cout << "                  " << numFlights;
+        cout << "\n=====================================\n";
     } else {
         cout << "Destination Airport Vertex Not Found!\n";
     }
+}
+void Controller::showDistance(Flight f) {
+    cout << "\n========== Flight Distance =========\n";
+    cout << "              " << f.getDistance() << " km";
+    cout << "\n=====================================\n";
 }
 void Controller::displayCredits() {
     cout << "\n=============== Credits ============= \n";
