@@ -88,7 +88,7 @@ void Controller::displayMenu() {
                     cout << "2. Number of Airlines\n ";
                     cout << "3. Number of Flights\n ";
                     cout << "4. Longest Trip\n "; //TODO (7) (Most Stops)
-                    cout << "5. Top X Airports\n "; //TODO (8) (In+Out Degree Max)
+                    cout << "5. Top X Airports\n ";
                     cout << "6. Essential Airports\n "; //TODO (9) (Bridge)
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
@@ -109,6 +109,10 @@ void Controller::displayMenu() {
                             break;
                         case 3:
                             numFlights();
+                            sleep(3);
+                            break;
+                        case 5:
+                            topAirports();
                             sleep(3);
                             break;
                         default:
@@ -263,7 +267,7 @@ void Controller::displayMenu() {
                 break;
             }
             case 4: {
-                //Choose Flight //TODO Airport City or Location (coordinates)
+                //Choose Flight
                 cout << "Enter Source Airport Code: ";
                 cin >> source;
                 auto airsource = airportHashTable.find(source);
@@ -457,6 +461,48 @@ void Controller::numFlights() {
     cout << "\n=========== Flight Count ===========\n";
     cout << "                " << n << "\n=====================================\n";
 }
+
+void Controller::topAirports() {
+    int x;
+    cout << "X: ";
+    cin >> x;
+    // Data structure to store total degree of each airport
+    vector<pair<Airport, int>> airportDegrees;
+
+    // Iterate through all airports and calculate total degree
+    for (const auto &vertex : g.getVertexSet()) {
+        int inDegree = 0;
+        int outDegree = vertex->getAdj().size();
+
+        // Calculate in-degree by traversing all vertices
+        for (const auto &v : g.getVertexSet()) {
+            for (const auto &edge : v->getAdj()) {
+                if (edge.getDest() == vertex) {
+                    ++inDegree;
+                }
+            }
+        }
+
+        int totalDegree = inDegree + outDegree;
+        airportDegrees.emplace_back(vertex->getInfo(), totalDegree);
+    }
+
+    // Sort airports based on total degree in descending order
+    sort(airportDegrees.begin(), airportDegrees.end(),
+              [](const auto &a, const auto &b) {
+                  return a.second > b.second;
+              });
+
+    // Print the top X airports
+    cout << "\n============ Top Airports ===========\n";
+    for (int i = 0; i < min(x, static_cast<int>(airportDegrees.size())); ++i) {
+        const Airport &airport = airportDegrees[i].first;
+        int totalDegree = airportDegrees[i].second;
+        cout << " " << i + 1 << ": " << airport.getCity() << ", " << airport.getCountry()
+                  << " (" << airport.getCode() << ") - Total Flights: " << totalDegree << "\n";
+    }
+    cout << "=====================================\n";
+}
 void Controller::numDepartures(Airport a) {
     unordered_set<string> uniqueAirlines;
     auto v = g.findVertex(a);
@@ -499,7 +545,7 @@ void Controller::showDestinations(Airport a) {
         string destinationInfo = destination.getCity() + destination.getCountry() + destination.getCode();
 
         if (visitedDestinations.find(destinationInfo) == visitedDestinations.end()) {
-            std::cout << destination.getCity() << ", " << destination.getCountry() << " (" << destination.getCode()
+            cout << destination.getCity() << ", " << destination.getCountry() << " (" << destination.getCode()
                       << ")\n ";
             visitedDestinations.insert(destinationInfo);
         }
@@ -525,7 +571,7 @@ void Controller::showArrivals(Airport a) {
                 string originInfo = origin.getCity() + origin.getCountry() + origin.getCode();
 
                 if (visitedOrigins.find(originInfo) == visitedOrigins.end()) {
-                    std::cout << origin.getCity() << ", " << origin.getCountry() << " (" << origin.getCode() << ")\n ";
+                    cout << origin.getCity() << ", " << origin.getCountry() << " (" << origin.getCode() << ")\n ";
                     visitedOrigins.insert(originInfo);
                 }
                 break; // Break to avoid printing the same origin multiple times for different incoming edges.
@@ -651,19 +697,19 @@ void Controller::BFSWithLayovers(const Airport& source, const Airport& destinati
 
         // Check if the current airport is the destination
         if (currentAirport == destination && currentRoute.size() - 2 <= maxLayovers) {
-            std::cout << "Found a flight with " << currentRoute.size() - 2 << " layovers to " << destination.getCode() << "\n";
-            std::cout << "Route: ";
+            cout << "Found a flight with " << currentRoute.size() - 2 << " layovers to " << destination.getCode() << "\n";
+            cout << "Route: ";
             for (size_t i = 0; i < currentRoute.size() - 1; ++i) {
-                std::cout << currentRoute[i].getCode() << " -> ";
+                cout << currentRoute[i].getCode() << " -> ";
             }
-            std::cout << destination.getCode() << "\n";
+            cout << destination.getCode() << "\n";
         }
 
         // Enqueue neighboring airports
         for (const auto& neighbor : g.findVertex(currentAirport)->getAdj()) {
-            auto it = std::find(visited.begin(), visited.end(), neighbor.getDest()->getInfo());
+            auto it = find(visited.begin(), visited.end(), neighbor.getDest()->getInfo());
             if (it == visited.end()) {
-                std::vector<Airport> newRoute = currentRoute;
+                vector<Airport> newRoute = currentRoute;
                 newRoute.push_back(neighbor.getDest()->getInfo());
                 q.push({neighbor.getDest()->getInfo(), newRoute});
                 visited.push_back(neighbor.getDest()->getInfo());
@@ -671,9 +717,9 @@ void Controller::BFSWithLayovers(const Airport& source, const Airport& destinati
         }
     }
 
-    auto it = std::find(visited.begin(), visited.end(), destination);
+    auto it = find(visited.begin(), visited.end(), destination);
     if (it == visited.end()) {
-        std::cout << "No flights found to " << destination.getCode() << " with " << maxLayovers << " or fewer layovers\n";
+        cout << "No flights found to " << destination.getCode() << " with " << maxLayovers << " or fewer layovers\n";
     }
 }
 

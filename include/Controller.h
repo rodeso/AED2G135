@@ -75,6 +75,8 @@ public:
     void numAirlines();
     /// Calculates the Total Flight Number
     void numFlights();
+    /// Shows Top X Airports with Most Flights (InDegree+OutDegree)
+    void topAirports();
     /// Calculates the Departing Flights Number from a given Airport
     void numDepartures(Airport a);
     /// Calculates the Arriving Flights Number to a given Airport
