@@ -23,15 +23,15 @@ are mandatory:
 5. [x] Number of destinations (airports, cities or countries) available for a given airport; 
 6. [ ] Number of reachable destinations (airports, cities or countries) from a given airport in a maximum number of X stops (lay-overs);
 7. [ ] Maximum trip and corresponding pair of source-destination airports (or pairs, if more than one), that is, the flight trip(s) with the greatest number of stops in between them;
-8. [ ] Identify the top-k airport with the greatest air traffic capacity, that is, with the greatest number of flights;
+8. [x] Identify the top-k airport with the greatest air traffic capacity, that is, with the greatest number of flights;
 9. [ ] Identify the airports that are essential to the network’s circulation capability (airports are essential if, when removed, areas of the network start to be unreachable). 
 
 Present the best flight option (or the set of options if they are equivalent) for a given source and
    destination locations. The best flight option is considered to be the one with the least amount of stops.
    Locations may be specified by the user (inputs) using different criteria:
-1. [ ] Airport code or name;
-2. [ ] City name, encapsulating all the airports departing from a given city; 
-3. [ ] Geographical coordinates, considering the closest airport to the given coordinates. If there is
+1. [X] Airport code or name;
+2. [X] City name, encapsulating all the airports departing from a given city; 
+3. [X] Geographical coordinates, considering the closest airport to the given coordinates. If there is
    more than one, consider all the closest ones.
 
 The user may also wish to use combinations of these, that is, the system must allow the user to

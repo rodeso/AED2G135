@@ -47,23 +47,28 @@ private:
     /// Data Structure for Airports with Constant Look-up Time
     unordered_map<string, Airport> airportHashTable;
     /// Data Structure for Cities with Constant Look-up Time
-    unordered_map<string, vector<Airport>> cityHashTable;
+    unordered_map<tuple<string, string>, vector<Airport>,AirportHash> cityHashTable;
     /// Data Structure for Airlines with Constant Look-up Time
     unordered_map<string, Airline> airlineHashTable;
 
     /// Simple HashTable Creation Method
     void addAirportToHashTable(const Airport& airport) {
         airportHashTable[airport.getCode()] = airport;
-        cityHashTable[airport.getCity()].push_back(airport);
+        tuple<string, string> key = make_tuple(airport.getCity(), airport.getCountry());
+        cityHashTable[key].push_back(airport);
     }
     /// Simple HashTable Creation Method
     void addAirlineToHashTable(const Airline& airline) {
         airlineHashTable[airline.getCode()] = airline;
     }
     /// Simple Auxiliary Function for showFlights Function
-    void BFSWithLayovers(const Airport& source, const Airport& destination, int maxLayovers);
-    /// Simple Auxiliary Function for findLongestPath function
-    void dfs(const Airport& current, std::vector<Airport>& currentPath, set<Airport>& visited, vector<Airport> longestPath);
+    vector<Airport> BFSWithLayovers(const Airport& source, const Airport& destination, int maxLayovers);
+    /// DFS Auxiliary Function for findLongestPath Function
+    void findLongestPathDFS(Vertex<Airport>* currentVertex, std::vector<Airport>& currentRoute, int& maxStops, std::vector<Airport>& maxRoute);
+    /// DFS Auxiliary for Articulation Points
+    void dfsArticulationPoints(Vertex<Airport>* v, Vertex<Airport>* parent, int& numDescendants, std::set<std::string>& uniqueArticulationPoints) const;
+    /// Haversine Formula
+    double haversine(double lat1, double lon1, double lat2, double lon2);
     /// Main Data Structure for the Program
     Graph<Airport> g;
 public:
@@ -81,6 +86,8 @@ public:
     void findLongestPath();
     /// Shows Top X Airports with Most Flights (InDegree+OutDegree)
     void topAirports();
+    /// Shows Articulation Points, meaning Airports that when removed create unreachable destinations
+    void ArticulationPoints() const;
     /// Calculates the Departing Flights Number from a given Airport
     void numDepartures(Airport a);
     /// Calculates the Arriving Flights Number to a given Airport
@@ -101,6 +108,12 @@ public:
     void numAirlineFlightsTo(Airline a);
     /// Shows the Distance between the two Airports of the Flight
     void showDistance(Flight f);
+    /// Finds the Closest Airport to a specified Location
+    Airport findClosest(double targetLat, double targetLon);
+    /// Shows All Available Airlines for the Specified Route
+    void airlinesAvailable(const vector<Airport>& chosenRoute);
+    /// Calculates the Total Distance of the Flights in the Route
+    void totalDistance(const vector<Airport>& chosenRoute);
     /// Simple Credits
     void displayCredits();
 };

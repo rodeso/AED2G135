@@ -50,5 +50,13 @@ public:
 
 };
 
+class AirportHash {
+public:
+    /// Hashing System for the City Hashtable
+    size_t operator()(const tuple<string, string>& key) const {
+        hash<string> hasher;
+        return hasher(get<0>(key)) ^ (hasher(get<1>(key)) << 1);
+    }
+};
 
 #endif //AED2G135_AIRPORT_H
