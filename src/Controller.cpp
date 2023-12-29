@@ -1,5 +1,3 @@
-#include <csignal>
-#include <cmath>
 #include "../include/Controller.h"
 
 
@@ -76,10 +74,7 @@ void Controller::displayMenu() {
         cout << "2. Airport Info\n ";
         cout << "3. Airline Info\n ";
         cout << "4. Flight Info\n ";
-        cout << "5. Find a Trip\n "; //TODO (4) (Present the Best Flight Options)
-        cout << "6. \n ";
-        cout << "7. \n ";
-        cout << "8. \n ";
+        cout << "5. Find a Trip\n ";
         cout << "9. Display Credits\n ";
         cout << "0. Exit";
         cout << "\n=====================================\n";
@@ -93,9 +88,9 @@ void Controller::displayMenu() {
                     cout << "1. Number of Airports\n ";
                     cout << "2. Number of Airlines\n ";
                     cout << "3. Number of Flights\n ";
-                    cout << "4. Longest Trip\n "; //TODO (7) (Most Stops) (CRASHES)
+                    cout << "4. Longest Trip\n "; //TODO (7) (Most Stops) (ENDLESS)
                     cout << "5. Top X Airports\n ";
-                    cout << "6. Essential Airports\n "; //TODO (9) (Articulation Points)
+                    cout << "6. Essential Airports\n "; //TODO (9) (Articulation Points) (CRASHES)
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
                     cin >> i;
@@ -141,7 +136,6 @@ void Controller::displayMenu() {
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Enter Airport Code or City: ";
                 getline(cin, airport);
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 if (airport.size() > 3) {
                     cout << "Enter Country Name: ";
                     getline(cin, country);
@@ -227,6 +221,13 @@ void Controller::displayMenu() {
                             showFlightsFrom(chosenSource);
                             sleep(3);
                             break;
+                        case 7:
+                            int x;
+                            cout << "Maximum Lay-overs? ";
+                            cin >> x;
+                            possibleDestinations(chosenSource, x);
+                            sleep(3);
+                            break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
                             break;
@@ -256,6 +257,7 @@ void Controller::displayMenu() {
                     cout << "3. Flights To a Location\n ";
                     cout << "4. Top X Airports (Departures)\n "; //TODO
                     cout << "5. Top X Airports (Arrivals)\n ";   //TODO
+                    cout << "6. Flight Availability\n "; //TODO
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
                     cin >> i;
@@ -590,7 +592,7 @@ void Controller::numFlights() {
     cout << "\n=========== Flight Count ===========\n";
     cout << "                " << n << "\n=====================================\n";
 }
-void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, std::vector<Airport>& currentRoute, int& maxStops, std::vector<Airport>& maxRoute) {
+void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, vector<Airport>& currentRoute, int& maxStops, vector<Airport>& maxRoute) {
     // Check if the current route has more stops than the current maximum
     if (currentRoute.size() - 1 > maxStops) {
         maxStops = currentRoute.size() - 1;
@@ -619,21 +621,21 @@ void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, std::vector<
 void Controller::findLongestPath() {
     // Initialize variables to track the maximum trip
     int maxStops = 0;
-    std::vector<Airport> maxRoute;
+    vector<Airport> maxRoute;
 
     // Perform DFS to explore all possible routes starting from each vertex
     for (auto v : g.getVertexSet()) {
         v->setVisited(true);  // Mark the starting vertex as visited
-        std::vector<Airport> currentRoute = {v->getInfo()};
+        vector<Airport> currentRoute = {v->getInfo()};
         findLongestPathDFS(v, currentRoute, maxStops, maxRoute);
     }
 
     // Print the result
-    std::cout << "Maximum trip with " << maxStops << " stops:\n";
+    cout << "Maximum trip with " << maxStops << " stops:\n";
     for (const auto& airport : maxRoute) {
-        std::cout << airport.getCode() << " -> ";
+        cout << airport.getCode() << " -> ";
     }
-    std::cout << "\n";
+    cout << "\n";
 }
 
 
@@ -857,6 +859,59 @@ void Controller::showFlightsFrom(Airport a) {
         BFSWithLayovers(source, a, x);
     }
 }
+void Controller::possibleDestinations(const Airport& chosenSource, int maxLayovers) {
+    auto sourceVertex = g.findVertex(chosenSource);
+
+    if (!sourceVertex) {
+        std::cout << "Chosen source airport not found.\n";
+        return;
+    }
+
+    set<Airport> visitedAirports;
+    set<std::string> visitedCities;
+    set<std::string> visitedCountries;
+
+    std::queue<std::pair<Airport, int>> q;
+    q.push({chosenSource, 0});
+
+    while (!q.empty()) {
+        auto front = q.front();
+        q.pop();
+
+        Airport currentAirport = front.first;
+        int layovers = front.second;
+
+        // Mark the current airport as visited
+        visitedAirports.insert(currentAirport);
+        visitedCities.insert(currentAirport.getCity());
+        visitedCountries.insert(currentAirport.getCountry());
+
+        if (layovers <= maxLayovers) {
+            auto currentVertex = g.findVertex(currentAirport);
+            currentVertex->setVisited(true);
+
+            for (const auto& edge : currentVertex->getAdj()) {
+                auto neighborAirport = edge.getDest()->getInfo();
+
+                if (!edge.getDest()->isVisited()) {
+                    q.push({neighborAirport, layovers + 1});
+
+                    // Mark the neighbor airport as visited
+                    edge.getDest()->setVisited(true);
+                }
+            }
+        }
+    }
+    for (auto v : g.getVertexSet()) {
+        v->setVisited(false);
+    }
+    cout << "\n======= Reachable Destinations ======\n ";
+    cout << "Possible destinations from " << chosenSource.getCode() << " with up to " << maxLayovers << " layovers:\n ";
+    cout << "Unique Airports: " << visitedAirports.size() << "\n ";
+    cout << "Unique Cities: " << visitedCities.size() << "\n ";
+    cout << "Unique Countries: " << visitedCountries.size();
+    cout << "\n=====================================\n";
+}
 vector<Airport> Controller::BFSWithLayovers(const Airport& source, const Airport& destination, int maxLayovers) {
     vector<Airport> res;
     queue<pair<Airport, vector<Airport>>> q;
@@ -988,17 +1043,17 @@ double Controller::haversine(double lat1, double lon1, double lat2, double lon2)
     const double dLat = (lat2 - lat1) * (M_PI / 180.0);
     const double dLon = (lon2 - lon1) * (M_PI / 180.0);
 
-    const double a = std::sin(dLat / 2) * std::sin(dLat / 2) +
-                     std::cos(lat1 * (M_PI / 180.0)) * std::cos(lat2 * (M_PI / 180.0)) *
-                     std::sin(dLon / 2) * std::sin(dLon / 2);
+    const double a = sin(dLat / 2) * sin(dLat / 2) +
+                     cos(lat1 * (M_PI / 180.0)) * cos(lat2 * (M_PI / 180.0)) *
+                     sin(dLon / 2) * sin(dLon / 2);
 
-    const double c = 2 * std::atan2(std::sqrt(a), std::sqrt(1 - a));
+    const double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     return R * c;
 }
 Airport Controller::findClosest(double targetLat, double targetLon) {
     Airport closest;
-    double minDistance = std::numeric_limits<double>::max();
+    double minDistance = numeric_limits<double>::max();
 
     for (const auto& airport : airports) {
         double distance = haversine(targetLat, targetLon, airport.getLatitude(), airport.getLongitude());
@@ -1012,11 +1067,11 @@ Airport Controller::findClosest(double targetLat, double targetLon) {
 }
 void Controller::airlinesAvailable(const vector<Airport>& chosenRoute) {
     if (chosenRoute.size() < 2) {
-        std::cout << "Invalid route size.\n";
+        cout << "Invalid route size.\n";
         return;
     }
     cout << "\n=============== Airlines ============\n ";
-    std::cout << "Available Airlines for the chosen route:\n";
+    cout << "Available Airlines for the chosen route:\n";
 
     for (size_t i = 0; i < chosenRoute.size() - 1; ++i) {
         auto currentAirport = chosenRoute[i];
@@ -1035,12 +1090,12 @@ void Controller::airlinesAvailable(const vector<Airport>& chosenRoute) {
             }
 
             if (!uniqueAirlines.empty()) {
-                std::cout << " From " << currentAirport.getCode() << " to " << nextAirport.getCode() << ":\n ";
+                cout << " From " << currentAirport.getCode() << " to " << nextAirport.getCode() << ":\n ";
                 for (const auto& airline : uniqueAirlines) {
-                    std::cout << " - " << airline.getCode() << ": " << airline.getName() << "\n ";
+                    cout << " - " << airline.getCode() << ": " << airline.getName() << "\n ";
                 }
             } else {
-                std::cout << " No airlines found from " << currentAirport.getCode() << " to " << nextAirport.getCode() << "\n";
+                cout << " No airlines found from " << currentAirport.getCode() << " to " << nextAirport.getCode() << "\n";
             }
         }
     }

@@ -28,6 +28,8 @@
 #include <algorithm>
 #include <limits>
 #include <queue>
+#include <csignal>
+#include <cmath>
 #include "../include/Graph.h"
 #include "../include/Airline.h"
 #include "../include/Airport.h"
@@ -100,6 +102,8 @@ public:
     void showFlightsTo(Airport a);
     /// Shows the Possible Flights from a chosen Airport to a given Airport
     void showFlightsFrom(Airport a);
+    /// Number of reachable destinations (airports, cities or countries) from a given airport in a maximum number of X stops (lay-overs)
+    void possibleDestinations(const Airport& chosenSource, int maxLayovers);
     /// Shows the Number of Flights a given Airline flies
     void numAirlineFlights(Airline a);
     /// Shows the Number of Flights a given Airline flies from a chosen Airport

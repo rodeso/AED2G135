@@ -21,7 +21,7 @@ are mandatory:
 3. [x] Number of flights per city/airline; 
 4. [x] Number of different countries that a given airport/city flies to; 
 5. [x] Number of destinations (airports, cities or countries) available for a given airport; 
-6. [ ] Number of reachable destinations (airports, cities or countries) from a given airport in a maximum number of X stops (lay-overs);
+6. [X] Number of reachable destinations (airports, cities or countries) from a given airport in a maximum number of X stops (lay-overs);
 7. [ ] Maximum trip and corresponding pair of source-destination airports (or pairs, if more than one), that is, the flight trip(s) with the greatest number of stops in between them;
 8. [x] Identify the top-k airport with the greatest air traffic capacity, that is, with the greatest number of flights;
 9. [ ] Identify the airports that are essential to the network’s circulation capability (airports are essential if, when removed, areas of the network start to be unreachable). 

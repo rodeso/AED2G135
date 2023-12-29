@@ -1,5 +1,3 @@
-#include <sstream>
-#include <fstream>
 #include "../include/CSVParser.h"
 
 vector<Airport> CSVParser::parseAirports(const string& filename) {
@@ -7,7 +5,7 @@ vector<Airport> CSVParser::parseAirports(const string& filename) {
 
     ifstream file(filename);
     if (!file.is_open()) {
-        // Handle file open error
+        cout << "Airport file in wrong location, please see Controller.cpp, line 5";
         return airports;
     }
 
@@ -39,7 +37,7 @@ vector<Airline> CSVParser::parseAirlines(const string& filename) {
 
     ifstream file(filename);
     if (!file.is_open()) {
-        // Handle file open error
+        cout << "Airline file in wrong location, please see Controller.cpp, line 5";
         return airlines;
     }
 
@@ -67,7 +65,7 @@ vector<Flight> CSVParser::parseFlights(const string& filename, const vector<Airp
 
     ifstream file(filename);
     if (!file.is_open()) {
-        // Handle file open error
+        cout << "Flight file in wrong location, please see Controller.cpp, line 5";
         return flights;
     }
 

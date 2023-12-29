@@ -3,6 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
+#include <fstream>
+#include <iostream>
 #include "Airport.h"
 #include "Airline.h"
 #include "Flight.h"
