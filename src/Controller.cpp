@@ -464,7 +464,6 @@ void Controller::displayMenu() {
                             cin.ignore(numeric_limits<streamsize>::max(), '\n');
                             cout << "Enter City Name: ";
                             getline(cin, city);
-                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
                             cout << "Enter Country Name: ";
                             getline(cin, country);
                             cout << "Looking Airports in " << city << ", " << country << endl;
@@ -507,6 +506,10 @@ void Controller::displayMenu() {
                         auto v2 = g.findVertex(b);
                         resC.push_back(BFSWithLayovers(a, b, 9));
                     }
+                }
+                if (resC.size() == 0) {
+                    cout << "\nThis Route is Invalid! Try Again.";
+                    break;
                 }
                 cout << "\nChoose Route for More Info: ";
                 cin >> i;
@@ -1032,16 +1035,16 @@ void Controller::airlinesAvailable(const vector<Airport>& chosenRoute) {
             }
 
             if (!uniqueAirlines.empty()) {
-                std::cout << " From " << currentAirport.getCode() << " to " << nextAirport.getCode() << ":\n  ";
+                std::cout << " From " << currentAirport.getCode() << " to " << nextAirport.getCode() << ":\n ";
                 for (const auto& airline : uniqueAirlines) {
-                    std::cout << " - " << airline.getCode() << ": " << airline.getName() << "\n";
+                    std::cout << " - " << airline.getCode() << ": " << airline.getName() << "\n ";
                 }
             } else {
                 std::cout << " No airlines found from " << currentAirport.getCode() << " to " << nextAirport.getCode() << "\n";
             }
         }
     }
-    cout << "\n=====================================\n";
+    cout << "=====================================\n";
 }
 void Controller::totalDistance(const vector<Airport>& chosenRoute) {
     unsigned n = 0;
