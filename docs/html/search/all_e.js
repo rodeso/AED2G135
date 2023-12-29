@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['showdestinations_0',['showDestinations',['../class_controller.html#a99d85097393e404c466fbdcdd54ea644',1,'Controller']]],
-  ['showflights_1',['showFlights',['../class_controller.html#ad1507b4e92b6bd8f8dc5d4278a52afbd',1,'Controller']]]
+  ['page_0',['Main Page',['../index.html',1,'']]],
+  ['processing_1',['processing',['../class_vertex.html#ae575d4b9a6b1ada3f9626c458c060f54',1,'Vertex']]]
 ];

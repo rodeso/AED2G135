@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['numairlineflights_0',['numAirlineFlights',['../class_controller.html#acaf6cf05b2d8676a28b0a5a3cf9854bb',1,'Controller']]],
-  ['numairlines_1',['numAirlines',['../class_controller.html#a3473ad04c1d1a2df57e59ef090b7bb7c',1,'Controller']]],
-  ['numairports_2',['numAirports',['../class_controller.html#a9df0f997e14ff0aaaa8f10dedc6ee90e',1,'Controller']]],
-  ['numarrivals_3',['numArrivals',['../class_controller.html#af23f7d0e629097615dcca182ae1d18d3',1,'Controller']]],
-  ['numdepartures_4',['numDepartures',['../class_controller.html#a7046a153edc5f9cfd8ab9c0dbcae12b7',1,'Controller']]],
-  ['numflights_5',['numFlights',['../class_controller.html#a72d6546e8d36ea87f9d0f64d61e981be',1,'Controller']]]
+  ['getcallsign_0',['getCallsign',['../class_airline.html#aae3f8e231a603c6deb9c214f88957fc6',1,'Airline']]],
+  ['getcity_1',['getCity',['../class_airport.html#adff088d0536ead7d1c060c385da03f32',1,'Airport']]],
+  ['getcode_2',['getcode',['../class_airline.html#a41ef613d6b390c463821b9ae43d9ec84',1,'Airline::getCode()'],['../class_airport.html#ad1369e1d47c87e205f1718b853a66d54',1,'Airport::getCode()']]],
+  ['getcountry_3',['getcountry',['../class_airline.html#a265c119d09effb03f8c7b3107f8d49dd',1,'Airline::getCountry()'],['../class_airport.html#ac0ce4ad3ce71653f13b96e5d40648588',1,'Airport::getCountry() const']]],
+  ['getlatitude_4',['getLatitude',['../class_airport.html#aed71ba4592b2a1401eb182931f2d3f06',1,'Airport']]],
+  ['getlongitude_5',['getLongitude',['../class_airport.html#ad8cd931389b14d63e5933a1658b653a3',1,'Airport']]],
+  ['getname_6',['getname',['../class_airline.html#a24f8b8e17d2d10af233b12671673bcd8',1,'Airline::getName()'],['../class_airport.html#a93efcd09328d24469d97a81e8048b776',1,'Airport::getName()']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['indegree_0',['indegree',['../class_vertex.html#ab29ac1b694fc673ba26cfc6d3e9bda13',1,'Vertex']]]
+  ['haversine_0',['haversine',['../class_controller.html#a4927917ded0d308b148b1313fe908e51',1,'Controller']]]
 ];

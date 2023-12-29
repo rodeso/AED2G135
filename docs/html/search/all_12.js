@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['you_20should_20meet_20the_20following_20important_20requirements_20along_20with_20other_20functionalities_20you_20may_20find_20relevant_0',['In order to develop your flight management system, you should meet the following important requirements, along with other functionalities you may find relevant.',['../md_docs_2tasks.html',1,'']]],
-  ['your_20flight_20management_20system_20you_20should_20meet_20the_20following_20important_20requirements_20along_20with_20other_20functionalities_20you_20may_20find_20relevant_1',['In order to develop your flight management system, you should meet the following important requirements, along with other functionalities you may find relevant.',['../md_docs_2tasks.html',1,'']]]
+  ['weight_0',['weight',['../class_edge.html#af188b57b604f0d65e2da48733bd76426',1,'Edge']]]
 ];
