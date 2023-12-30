@@ -87,6 +87,7 @@ public:
     /// Shows the Trip with the most Stops
     void findLongestPath();
     /// Shows Top X Airports with Most Flights (InDegree+OutDegree)
+    /// O(V⋅E+V⋅log(V)+X)
     void topAirports();
     /// Shows Articulation Points, meaning Airports that when removed create unreachable destinations
     void ArticulationPoints() const;
