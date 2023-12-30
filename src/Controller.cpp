@@ -152,11 +152,13 @@ void Controller::displayMenu() {
                         continue;
                     }
                     cout << "\n========== Airport(s) Found =========\n";
+                    int contador = 1;
                     for (auto a: resA) {
                         cout << "                ";
-                        cout << a.getCode() << endl;
+                        cout << contador << '-' << ' ' << a.getCode() << endl;
+                        contador++;
                     }
-                    cout << "=====================================\n";
+                    cout << "========== Choose a number ==========\n";
                     if (resA.size() == 1) {
                         chosenSource = resA[0];
 

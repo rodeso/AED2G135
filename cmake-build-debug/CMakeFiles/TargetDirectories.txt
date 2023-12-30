@@ -1,0 +1,3 @@
+/home/andre/Desktop/Andre/Trabalho/Faculdade/2ºAno/1ºS/AED/projeto2/AED2G135/cmake-build-debug/CMakeFiles/AED2G135.dir
+/home/andre/Desktop/Andre/Trabalho/Faculdade/2ºAno/1ºS/AED/projeto2/AED2G135/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/andre/Desktop/Andre/Trabalho/Faculdade/2ºAno/1ºS/AED/projeto2/AED2G135/cmake-build-debug/CMakeFiles/rebuild_cache.dir

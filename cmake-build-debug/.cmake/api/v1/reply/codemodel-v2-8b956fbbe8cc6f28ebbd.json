@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.27"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "AED2G135",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "AED2G135::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-AED2G135-Debug-b56c319d27a72e5c629f.json",
+					"name" : "AED2G135",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/andre/Desktop/Andre/Trabalho/Faculdade/2\u00baAno/1\u00baS/AED/projeto2/AED2G135/cmake-build-debug",
+		"source" : "/home/andre/Desktop/Andre/Trabalho/Faculdade/2\u00baAno/1\u00baS/AED/projeto2/AED2G135"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
