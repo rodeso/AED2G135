@@ -287,6 +287,12 @@ void Controller::displayMenu() {
                             sleep(3);
                             break;
                         case 4:
+                            topAirportsDepartures(chosenAirline);
+                            sleep(3);
+                            break;
+                        case 5:
+                            topAirportsArrivals(chosenAirline);
+                            sleep(3);
                             break;
                         case 6:
                             hasFlight(chosenAirline);
@@ -1137,6 +1143,87 @@ void Controller::numAirlineFlightsTo(Airline a) {
         cout << "Destination Airport Vertex Not Found!\n";
     }
 }
+
+
+void Controller::topAirportsDepartures(Airline a){
+    int x;
+    cout << "X: ";
+    cin >> x;
+    // Data structure to store total degree of each airport
+    vector<pair<Airport, int>> airportDegrees;
+
+    // Iterate through all airports and calculate total degree
+    for (const auto &vertex : g.getVertexSet()) {
+        int outDegree = 0;
+
+        // Calculate out-degree by traversing all edges
+        for (const auto &edge : vertex->getAdj()) {
+            if (edge.getAirline() == a) {
+                ++outDegree;
+            }
+        }
+
+        airportDegrees.emplace_back(vertex->getInfo(), outDegree);
+    }
+
+    // Sort airports based on total degree in descending order
+    sort(airportDegrees.begin(), airportDegrees.end(),
+              [](const auto &a, const auto &b) {
+                  return a.second > b.second;
+              });
+
+    // Print the top X airports
+    cout << "\n============ Top Airports ===========\n";
+    for (int i = 0; i < min(x, static_cast<int>(airportDegrees.size())); ++i) {
+        const Airport &airport = airportDegrees[i].first;
+        int totalDegree = airportDegrees[i].second;
+        cout << " " << i + 1 << ": " << airport.getCity() << ", " << airport.getCountry()
+                  << " (" << airport.getCode() << ") - Total Flights: " << totalDegree << "\n";
+    }
+    cout << "=====================================\n";
+}
+
+void Controller::topAirportsArrivals(Airline a){
+    int x;
+    cout << "X: ";
+    cin >> x;
+    // Data structure to store total degree of each airport
+    vector<pair<Airport, int>> airportDegrees;
+
+    // Iterate through all airports and calculate total degree
+    for (const auto &vertex : g.getVertexSet()) {
+        int inDegree = 0;
+
+        // Calculate in-degree by traversing all vertices
+        for (const auto &v : g.getVertexSet()) {
+            for (const auto &edge : v->getAdj()) {
+                if (edge.getDest() == vertex && edge.getAirline() == a) {
+                    ++inDegree;
+                }
+            }
+        }
+
+        airportDegrees.emplace_back(vertex->getInfo(), inDegree);
+    }
+
+    // Sort airports based on total degree in descending order
+    sort(airportDegrees.begin(), airportDegrees.end(),
+              [](const auto &a, const auto &b) {
+                  return a.second > b.second;
+              });
+
+    // Print the top X airports
+    cout << "\n============ Top Airports ===========\n";
+    for (int i = 0; i < min(x, static_cast<int>(airportDegrees.size())); ++i) {
+        const Airport &airport = airportDegrees[i].first;
+        int totalDegree = airportDegrees[i].second;
+        cout << " " << i + 1 << ": " << airport.getCity() << ", " << airport.getCountry()
+                  << " (" << airport.getCode() << ") - Total Flights: " << totalDegree << "\n";
+    }
+    cout << "=====================================\n";
+}
+
+
 void Controller::hasFlight(Airline a) {
     string sourceCode, destCode;
 

@@ -110,6 +110,10 @@ public:
     void numAirlineFlightsFrom(Airline a);
     /// Shows the Number of Flights a given Airline flies to a chosen Airport
     void numAirlineFlightsTo(Airline a);
+    /// Shows the Number of Flights a given Airline flies from a chosen Airport to a chosen Airport
+    void topAirportsDepartures(Airline a);
+    /// Shows the Number of Flights a given Airline flies to a chosen Airport from a chosen Airport
+    void topAirportsArrivals(Airline a);
     /// Tells if Airline has Certain Flight
     void hasFlight(Airline a);
     /// Shows the Distance between the two Airports of the Flight
