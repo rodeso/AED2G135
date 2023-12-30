@@ -126,7 +126,8 @@ void Controller::displayMenu() {
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
-                            break;
+                            sleep(1);
+                            continue;
                     }
                 }
                 break;
@@ -148,7 +149,7 @@ void Controller::displayMenu() {
                     } else {
                         cout << "City Not Found!";
                         sleep(1);
-                        break;
+                        continue;
                     }
                     cout << "\n========== Airport(s) Found =========\n";
                     for (auto a: resA) {
@@ -175,7 +176,8 @@ void Controller::displayMenu() {
                     if (airportIter != airportHashTable.end()) {
                         chosenSource = airportIter->second;
                     }
-                    else {cout << "Airport Not Found!\n"; sleep(1);break;}
+                    else {cout << "Airport Not Found!\n"; sleep(1);
+                        continue;}
                 }
                 cout << chosenSource.getName() << " Airport, in " << chosenSource.getCity() << ", " << chosenSource.getCountry()
                      << " was Selected!\n";
@@ -230,7 +232,8 @@ void Controller::displayMenu() {
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
-                            break;
+                            sleep(1);
+                            continue;
                     }
                 }
                 break;
@@ -243,7 +246,9 @@ void Controller::displayMenu() {
                 if (airlineIter != airlineHashTable.end()) {
                     chosenAirline = airlineIter->second;
                 }
-                else {cout << "Airline Not Found!\n"; break;}
+                else {cout << "Airline Not Found!\n";
+                    sleep(1);
+                    continue;}
                 cout << "\n=========== Airline Found ===========\n ";
                 cout << "             " << chosenAirline.getCallsign();
                 cout << "\n=====================================\n";
@@ -283,7 +288,8 @@ void Controller::displayMenu() {
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
-                            break;
+                            sleep(1);
+                            continue;
                     }
                 }
                 break;
@@ -296,21 +302,21 @@ void Controller::displayMenu() {
                 if (airsource != airportHashTable.end()) {
                     chosenSource = airsource->second;
                 }
-                else {cout << "Airport Not Found!\n"; break;}
+                else {cout << "Airport Not Found!\n"; sleep(1); continue;}
                 cout << "Enter Destination Airport Code: ";
                 cin >> destination;
                 auto airdest = airportHashTable.find(destination);
                 if (airdest != airportHashTable.end()) {
                     chosenDest = airdest->second;
                 }
-                else {cout << "Airport Not Found!\n"; break;}
+                else {cout << "Airport Not Found!\n"; sleep(1); continue;}
                 cout << "Enter Airline Code: ";
                 cin >> airline;
                 auto airlineIter = airlineHashTable.find(airline);
                 if (airlineIter != airlineHashTable.end()) {
                     chosenAirline = airlineIter->second;
                 }
-                else {cout << "Airline Not Found!\n"; sleep(1);break;}
+                else {cout << "Airline Not Found!\n"; sleep(1); continue;}
                 auto v = g.findVertex(chosenSource);
                 bool flightFound = false;
                 for (auto u : v->getAdj()) {
@@ -364,7 +370,8 @@ void Controller::displayMenu() {
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
-                            break;
+                            sleep(1);
+                            continue;
                     }
                 }
                 break;
@@ -380,9 +387,15 @@ void Controller::displayMenu() {
                     cout << "\n=====================================\n";
 
                     cin >> i;
+                    resA = {};
                     auto airsource = airportHashTable.find(source);
                     auto cityIter = cityHashTable.find(key);
                     bool multipleSource = false;
+                    if (i == 0) {
+                        cout << "Returning to the Main Menu!\n";
+                        sleep(1);
+                        break;
+                    }
                     switch (i) {
                         case 1: //CODE
                             cout << "Enter Source Airport Code: ";
@@ -393,7 +406,7 @@ void Controller::displayMenu() {
                             } else {
                                 cout << "Airport Not Found!\n";
                                 sleep(1);
-                                break;
+                                continue;
                             }
                             resA.push_back(chosenSource);
                             break;
@@ -411,7 +424,7 @@ void Controller::displayMenu() {
                             } else {
                                 cout << "City Not Found!";
                                 sleep(1);
-                                break;
+                                continue;
                             }
                             if (resA.size() > 1) { multipleSource = true; }
                             break;
@@ -425,7 +438,7 @@ void Controller::displayMenu() {
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
-                            break;
+                            continue;
                     }
                     cout << "\n======= Chosen Starting Point =======\n";
                     for (auto a: resA) {
@@ -445,9 +458,15 @@ void Controller::displayMenu() {
                     cout << "\n=====================================\n";
 
                     cin >> i;
+                    resB = {};
                     auto airDest = airportHashTable.find(source);
                     auto cityIter = cityHashTable.find(key);
                     bool multipleDest = false;
+                    if (i == 0) {
+                        cout << "Returning to the Main Menu!\n";
+                        sleep(1);
+                        break;
+                    }
                     switch (i) {
                         case 1: //CODE
                             cout << "Enter Source Airport Code: ";
@@ -458,7 +477,7 @@ void Controller::displayMenu() {
                             } else {
                                 cout << "Airport Not Found!\n";
                                 sleep(1);
-                                break;
+                                continue;
                             }
                             resB.push_back(chosenDest);
                             break;
@@ -476,7 +495,7 @@ void Controller::displayMenu() {
                             } else {
                                 cout << "City Not Found!";
                                 sleep(1);
-                                break;
+                                continue;
                             }
                             if (resB.size() > 1) { multipleDest = true; }
                             break;
@@ -490,7 +509,8 @@ void Controller::displayMenu() {
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
-                            break;
+                            sleep(1);
+                            continue;
                     }
                     cout << "\n======== Chosen Ending Point ========\n";
                     for (auto a: resB) {
@@ -554,7 +574,8 @@ void Controller::displayMenu() {
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
-                            break;
+                            sleep(1);
+                            continue;
                     }
                 }
                 sleep(3);
@@ -569,6 +590,7 @@ void Controller::displayMenu() {
                 return;
             default:
                 cout << "Invalid choice. Please try again.\n";
+                sleep(1);
                 break;
         }
 
