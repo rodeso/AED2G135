@@ -12,5 +12,6 @@ var searchData=
   ['airporthash_9',['AirportHash',['../class_airport_hash.html',1,'']]],
   ['airporthashtable_10',['airportHashTable',['../class_controller.html#a824cce335164a9b4c750b1dc726ac73f',1,'Controller']]],
   ['airports_11',['airports',['../class_controller.html#a09619d78b354bc3d4141d84b6407a775',1,'Controller']]],
-  ['articulationpoints_12',['ArticulationPoints',['../class_controller.html#a418568e41fad5d4e66fa3eddbee9d9a7',1,'Controller']]]
+  ['articulationpoints_12',['ArticulationPoints',['../class_controller.html#a418568e41fad5d4e66fa3eddbee9d9a7',1,'Controller']]],
+  ['articulationpointsdfs_13',['ArticulationPointsDFS',['../class_controller.html#a87c2fbafbf342eef1172edf13dbb64f4',1,'Controller']]]
 ];
