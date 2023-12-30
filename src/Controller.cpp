@@ -262,7 +262,7 @@ void Controller::displayMenu() {
                     cout << "3. Flights To a Location\n ";
                     cout << "4. Top X Airports (Departures)\n "; //TODO
                     cout << "5. Top X Airports (Arrivals)\n ";   //TODO
-                    cout << "6. Flight Availability\n "; //TODO
+                    cout << "6. Flight Availability\n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
                     cin >> i;
@@ -285,6 +285,10 @@ void Controller::displayMenu() {
                             sleep(3);
                             break;
                         case 4:
+                            break;
+                        case 6:
+                            hasFlight(chosenAirline);
+                            sleep(3);
                             break;
                         default:
                             cout << "Invalid choice. Please try again.\n";
@@ -343,9 +347,6 @@ void Controller::displayMenu() {
                 while (true) {
                     cout << "\n========= Flight Statistics ========\n ";
                     cout << "1. Distance\n ";
-                    cout << "2. \n ";
-                    cout << "3. \n ";
-                    cout << "4. \n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
                     cin >> i;
@@ -357,15 +358,6 @@ void Controller::displayMenu() {
                     switch (i) {
                         case 1:
                             showDistance(chosenFlight);
-                            sleep(3);
-                            break;
-                        case 2:
-                            sleep(3);
-                            break;
-                        case 3:
-                            sleep(3);
-                            break;
-                        case 4:
                             sleep(3);
                             break;
                         default:
@@ -1141,6 +1133,31 @@ void Controller::numAirlineFlightsTo(Airline a) {
         cout << "\n=====================================\n";
     } else {
         cout << "Destination Airport Vertex Not Found!\n";
+    }
+}
+void Controller::hasFlight(Airline a) {
+    string sourceCode, destCode;
+
+    cout << "Enter Source Airport Code: ";
+    cin >> sourceCode;
+
+    cout << "Enter Destination Airport Code: ";
+    cin >> destCode;
+
+    // Iterate through the flights vector and check for matches
+    bool flightFound = false;
+    for (const Flight& flight : flights) {
+        if (flight.getSourceAirport().getCode() == sourceCode && flight.getTargetAirport().getCode() == destCode && flight.getAirline() == a) {
+            flightFound = true;
+            break;  // Exit the loop as soon as a match is found
+        }
+    }
+
+    // Check the result
+    if (flightFound) {
+        cout << "The airline has a flight from " << sourceCode << " to " << destCode << endl;
+    } else {
+        cout << "No matching flight found for the specified criteria." << endl;
     }
 }
 void Controller::showDistance(Flight f) {
