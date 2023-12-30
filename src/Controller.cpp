@@ -88,9 +88,9 @@ void Controller::displayMenu() {
                     cout << "1. Number of Airports\n ";
                     cout << "2. Number of Airlines\n ";
                     cout << "3. Number of Flights\n ";
-                    cout << "4. Longest Trip\n "; //TODO (7) (Most Stops) (ENDLESS)
+                    cout << "4. Longest Trip\n ";
                     cout << "5. Top X Airports\n ";
-                    cout << "6. Essential Airports\n "; //TODO (9) (Articulation Points) (CRASHES)
+                    cout << "6. Essential Airports\n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
                     cin >> i;
@@ -121,7 +121,7 @@ void Controller::displayMenu() {
                             sleep(3);
                             break;
                         case 6:
-                            //ArticulationPoints();
+                            ArticulationPoints();
                             sleep(3);
                             break;
                         default:
@@ -187,7 +187,7 @@ void Controller::displayMenu() {
                     cout << "4. Show Unique Arrivals\n ";
                     cout << "5. Find Airline with Flight To\n ";
                     cout << "6. Find Airline with Flight From\n ";
-                    cout << "7. Number of Possible Destinations\n "; //TODO (6)
+                    cout << "7. Number of Possible Destinations\n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
                     cin >> i;
@@ -599,15 +599,19 @@ void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, vector<Airpo
         maxRoute = currentRoute;
     }
 
+    // Mark the vertex as grey (being processed)
+    currentVertex->setProcessing(true);
+
     // Explore neighbors
     for (const auto& edge : currentVertex->getAdj()) {
         Vertex<Airport>* neighborVertex = edge.getDest();
 
         if (!neighborVertex->isVisited()) {
+            // Mark the neighbor as visited and add to the current route
             neighborVertex->setVisited(true);
-
-            // Add the neighbor to the current route and recursively explore
             currentRoute.push_back(neighborVertex->getInfo());
+
+            // Recursively explore the neighbor
             findLongestPathDFS(neighborVertex, currentRoute, maxStops, maxRoute);
 
             // Backtrack: remove the last added airport from the route
@@ -615,29 +619,113 @@ void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, vector<Airpo
         }
     }
 
-    // Reset visited status after exploration
-    currentVertex->setVisited(false);
+    // Mark the vertex as black (visited and processed)
+    currentVertex->setVisited(true);
+    currentVertex->setProcessing(false);
 }
+
 void Controller::findLongestPath() {
     // Initialize variables to track the maximum trip
+    for (auto v : g.getVertexSet()) {
+        v->setVisited(false);
+    }
     int maxStops = 0;
     vector<Airport> maxRoute;
 
-    // Perform DFS to explore all possible routes starting from each vertex
+    // Perform DFS to explore all possible routes starting from each white (unvisited) vertex
     for (auto v : g.getVertexSet()) {
-        v->setVisited(true);  // Mark the starting vertex as visited
-        vector<Airport> currentRoute = {v->getInfo()};
-        findLongestPathDFS(v, currentRoute, maxStops, maxRoute);
+        if (!v->isVisited()) {
+            vector<Airport> currentRoute = {v->getInfo()};
+            v->setVisited(true);
+            findLongestPathDFS(v, currentRoute, maxStops, maxRoute);
+        }
     }
-
+    for (auto v : g.getVertexSet()) {
+        v->setVisited(false);
+    }
     // Print the result
-    cout << "Maximum trip with " << maxStops << " stops:\n";
+    cout << "Maximum trip from " << maxRoute[0].getCode() << " to " << maxRoute[maxRoute.size()-1].getCode() << " with " << maxStops << " stops:\n";
     for (const auto& airport : maxRoute) {
         cout << airport.getCode() << " -> ";
     }
     cout << "\n";
 }
+void Controller::ArticulationPoints() const {
+    Graph<Airport> gCopy = g;
+    set<Vertex<Airport>*> articulationPoints;
+    for (auto v : gCopy.getVertexSet()) {
+        for (auto e : v->getAdj()) {
+            gCopy.addEdge(e.getDest()->getInfo(), v->getInfo(), 0, Airline());
+        }
+    }
 
+    // Mark all vertices as not visited
+    for (auto v : gCopy.getVertexSet()) {
+        v->setVisited(false);
+    }
+
+    // Perform DFS and find articulation points
+    int time = 0; // To store discovery times of vertices
+    for (auto v : gCopy.getVertexSet()) {
+        if (!v->isVisited()) {
+            ArticulationPointsDFS(v, articulationPoints, time, nullptr);
+        }
+    }
+
+    // Print the articulation points
+    cout << "Articulation Points:\n";
+    for (auto point : articulationPoints) {
+        cout << point->getInfo().getCode() << "\n";
+    }
+    cout << " Count: " << articulationPoints.size() << endl;
+}
+
+void Controller::ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Vertex<Airport>*>& articulationPoints, int& time, Vertex<Airport>* parent) const {
+    // Mark the current vertex as visited
+    currentVertex->setVisited(true);
+
+    // Initialize discovery time and low value
+    int discoveryTime = ++time;
+    int low = discoveryTime;
+
+    // Count of children in DFS tree
+    int children = 0;
+
+    // Iterate over all neighbors of the current vertex
+    for (const auto& edge : currentVertex->getAdj()) {
+        Vertex<Airport>* neighborVertex = edge.getDest();
+
+        // Skip processing the parent
+        if (neighborVertex == parent) {
+            continue;
+        }
+
+        // If the neighbor is not visited, process it
+        if (!neighborVertex->isVisited()) {
+            children++;
+            ArticulationPointsDFS(neighborVertex, articulationPoints, time, currentVertex);
+
+            // Check if the subtree rooted with neighbor has a back edge to an ancestor of currentVertex
+            low = min(low, neighborVertex->getLow());
+
+            // Check if the current vertex is an articulation point
+            if (neighborVertex->getLow() >= discoveryTime && parent != nullptr) {
+                articulationPoints.insert(currentVertex);
+            }
+        } else {
+            // Update low value for the case where the neighbor is visited and is not the parent
+            low = min(low, neighborVertex->getNum());
+        }
+    }
+
+    // Update low value for the current vertex
+    currentVertex->setLow(low);
+
+    // If the current vertex is the root and has more than one child, it's an articulation point
+    if (parent == nullptr && children > 1) {
+        articulationPoints.insert(currentVertex);
+    }
+}
 
 void Controller::topAirports() {
     int x;
@@ -863,15 +951,15 @@ void Controller::possibleDestinations(const Airport& chosenSource, int maxLayove
     auto sourceVertex = g.findVertex(chosenSource);
 
     if (!sourceVertex) {
-        std::cout << "Chosen source airport not found.\n";
+        cout << "Chosen source airport not found.\n";
         return;
     }
 
     set<Airport> visitedAirports;
-    set<std::string> visitedCities;
-    set<std::string> visitedCountries;
+    set<string> visitedCities;
+    set<string> visitedCountries;
 
-    std::queue<std::pair<Airport, int>> q;
+    queue<pair<Airport, int>> q;
     q.push({chosenSource, 0});
 
     while (!q.empty()) {

@@ -68,7 +68,7 @@ private:
     /// DFS Auxiliary Function for findLongestPath Function
     void findLongestPathDFS(Vertex<Airport>* currentVertex, std::vector<Airport>& currentRoute, int& maxStops, std::vector<Airport>& maxRoute);
     /// DFS Auxiliary for Articulation Points
-    void dfsArticulationPoints(Vertex<Airport>* v, Vertex<Airport>* parent, int& numDescendants, std::set<std::string>& uniqueArticulationPoints) const;
+    void ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Vertex<Airport>*>& articulationPoints, int& time, Vertex<Airport>* parent) const;
     /// Haversine Formula
     double haversine(double lat1, double lon1, double lat2, double lon2);
     /// Main Data Structure for the Program
