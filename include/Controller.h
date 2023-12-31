@@ -139,7 +139,7 @@ public:
     ///  O(V * E)
     void topAirportsDepartures(Airline a);
     /// Shows the Number of Flights a given Airline flies to a chosen Airport from a chosen Airport
-    ///   O(V * E)
+    ///  O(V * E)
     void topAirportsArrivals(Airline a);
     /// Tells if Airline has Certain Flight
     ///  O(N)
