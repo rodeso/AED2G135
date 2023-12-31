@@ -82,57 +82,82 @@ public:
     /// Default Constructor
     Controller();
     /// Program's Centre Function
+    ///  O(1)
     void displayMenu();
     /// Calculates the Total Airport Number
+    ///  O(1)
     void numAirports();
     /// Calculates the Total Airline Number
+    ///  O(1)
     void numAirlines();
     /// Calculates the Total Flight Number
+    ///  O(1)
     void numFlights();
     /// Shows the Trip with the most Stops
+    ///  O(V + E)
     void findLongestPath();
     /// Shows Top X Airports with Most Flights (InDegree+OutDegree)
-    /// O(V⋅E+V⋅log(V)+X)
+    ///  O(V⋅E+V⋅log(V)+X)
     void topAirports();
     /// Shows Articulation Points, meaning Airports that when removed create unreachable destinations
+    ///  O(V + E)
     void ArticulationPoints() const;
     /// Shows Longest Flight Path Pair
+    ///  O(V^2)
     std::vector<std::pair<Airport, Airport>> findLongestShortestPathPairs();
     /// Calculates the Departing Flights Number from a given Airport
+    ///  O(outgoing edges)
     void numDepartures(Airport a);
     /// Calculates the Arriving Flights Number to a given Airport
+    ///  O(V * outgoing edges)
     void numArrivals(Airport a);
     /// Shows all Possible Destinations from a given Airport
+    ///  O(outgoing edges)
     void showDestinations(Airport a);
     /// Shows all Possible Arrivals from a given Airport
+    ///  O(V * outgoing edges)
     void showArrivals(Airport a);
     /// Shows the Possible Flights from a given Airport to a chosen Airport
+    ///  O(V + E)
     void showFlightsTo(Airport a);
     /// Shows the Possible Flights from a chosen Airport to a given Airport
+    ///  O(V + E)
     void showFlightsFrom(Airport a);
     /// Number of reachable destinations (airports, cities or countries) from a given airport in a maximum number of X stops (lay-overs)
+    ///  O(V + E)
     void possibleDestinations(const Airport& chosenSource, int maxLayovers);
     /// Shows the Number of Flights a given Airline flies
+    ///  O(N)
     void numAirlineFlights(Airline a);
     /// Shows the Number of Flights a given Airline flies from a chosen Airport
+    ///  O(E)
     void numAirlineFlightsFrom(Airline a);
     /// Shows the Number of Flights a given Airline flies to a chosen Airport
+    ///  O(V * E)
     void numAirlineFlightsTo(Airline a);
     /// Shows the Number of Flights a given Airline flies from a chosen Airport to a chosen Airport
+    ///  O(V * E)
     void topAirportsDepartures(Airline a);
     /// Shows the Number of Flights a given Airline flies to a chosen Airport from a chosen Airport
+    ///   O(V * E)
     void topAirportsArrivals(Airline a);
     /// Tells if Airline has Certain Flight
+    ///  O(N)
     void hasFlight(Airline a);
     /// Shows the Distance between the two Airports of the Flight
+    ///  O(1)
     void showDistance(Flight f);
     /// Finds the Closest Airport to a specified Location
+    ///  O(V)
     Airport findClosest(double targetLat, double targetLon);
     /// Shows All Available Airlines for the Specified Route
+    ///  O(V * E)
     void airlinesAvailable(const vector<Airport>& chosenRoute);
     /// Calculates the Total Distance of the Flights in the Route
+    ///  O(N)
     void totalDistance(const vector<Airport>& chosenRoute);
     /// Simple Credits
+    ///  O(1)
     void displayCredits();
 };
 
