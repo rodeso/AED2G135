@@ -66,10 +66,15 @@ private:
     /// Simple Auxiliary Function for showFlights Function
     vector<Airport> BFSWithLayovers(const Airport& source, const Airport& destination, int maxLayovers);
     /// DFS Auxiliary Function for findLongestPath Function
-    void findLongestPathDFS(Vertex<Airport>* currentVertex, std::vector<Airport>& currentRoute, int& maxStops, std::vector<Airport>& maxRoute);
+    void findLongestPathDFS(Vertex<Airport>* currentVertex, vector<Airport>& currentRoute, int& maxStops, vector<Airport>& maxRoute);
     /// DFS Auxiliary for Articulation Points
     void ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Vertex<Airport>*>& articulationPoints, int& time, Vertex<Airport>* parent) const;
-    /// Haversine Formula
+    /// DFS Auxiliary for Longest Trip
+    void findLongestPathDFS(Vertex<Airport>* currentVertex, Airport destination, std::vector<Airport>& currentRoute, std::vector<std::pair<Airport, Airport>>& maxRoutePairs, int& maxStops);
+    /// Dijkstra Algorithm
+    void dijkstraShortestPaths(Vertex<Airport>* source, std::vector<vector<double>>& dist);
+    size_t getCodeIndex(const std::string& code) const;
+        /// Haversine Formula
     double haversine(double lat1, double lon1, double lat2, double lon2);
     /// Main Data Structure for the Program
     Graph<Airport> g;
@@ -91,6 +96,8 @@ public:
     void topAirports();
     /// Shows Articulation Points, meaning Airports that when removed create unreachable destinations
     void ArticulationPoints() const;
+    /// Shows Longest Flight Path Pair
+    std::vector<std::pair<Airport, Airport>> findLongestShortestPathPairs();
     /// Calculates the Departing Flights Number from a given Airport
     void numDepartures(Airport a);
     /// Calculates the Arriving Flights Number to a given Airport

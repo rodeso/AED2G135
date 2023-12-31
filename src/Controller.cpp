@@ -68,6 +68,7 @@ void Controller::displayMenu() {
     Flight chosenFlight;
     tuple<string, string> key;
     double latitude, longitude;
+    vector<pair<Airport, Airport>> longestPairs;
     while (true) {
         cout <<"\n===== Airport Management System =====\n ";
         cout << "1. General Statistics\n ";
@@ -88,9 +89,10 @@ void Controller::displayMenu() {
                     cout << "1. Number of Airports\n ";
                     cout << "2. Number of Airlines\n ";
                     cout << "3. Number of Flights\n ";
-                    cout << "4. Longest Trip\n ";
+                    cout << "4. Trip with Most Stops\n ";
                     cout << "5. Top X Airports\n ";
                     cout << "6. Essential Airports\n ";
+                    cout << "7. Longest Trip (Half across the Globe)\n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
                     cin >> i;
@@ -122,6 +124,19 @@ void Controller::displayMenu() {
                             break;
                         case 6:
                             ArticulationPoints();
+                            sleep(3);
+                            break;
+                        case 7:
+                            longestPairs = findLongestShortestPathPairs();
+
+                            if (longestPairs.empty()) {
+                                std::cout << "No longest routes found among the shortest paths.\n";
+                            } else {
+                                std::cout << "Longest routes among the shortest paths:\n";
+                                for (const auto& pair : longestPairs) {
+                                    std::cout << pair.first.getCode() << " -> " << pair.second.getCode() << "\n";
+                                }
+                            }
                             sleep(3);
                             break;
                         default:
@@ -790,6 +805,96 @@ void Controller::topAirports() {
     }
     cout << "=====================================\n";
 }
+size_t Controller::getCodeIndex(const std::string& code) const {
+    return static_cast<size_t>(code[0] - 'A') * 26 * 26 + static_cast<size_t>(code[1] - 'A') * 26 + static_cast<size_t>(code[2] - 'A');
+}
+void Controller::dijkstraShortestPaths(Vertex<Airport>* source, std::vector<std::vector<double>>& dist) {
+    std::priority_queue<std::pair<double, Vertex<Airport>*>, std::vector<std::pair<double, Vertex<Airport>*>>, std::greater<>> pq;
+    pq.push({0.0, source});
+    dist[getCodeIndex(source->getInfo().getCode())][getCodeIndex(source->getInfo().getCode())] = 0.0;
+
+    while (!pq.empty()) {
+        double currentDist = pq.top().first;
+        Vertex<Airport>* currentVertex = pq.top().second;
+        pq.pop();
+
+        for (const Edge<Airport>& edge : currentVertex->getAdj()) {
+            Airport neighborAirport = edge.getDest()->getInfo();
+            double weight = edge.getWeight();
+
+            if (currentDist + weight < dist[getCodeIndex(currentVertex->getInfo().getCode())][getCodeIndex(neighborAirport.getCode())]) {
+                dist[getCodeIndex(currentVertex->getInfo().getCode())][getCodeIndex(neighborAirport.getCode())] = currentDist + weight;
+                pq.push({currentDist + weight, edge.getDest()});
+            }
+        }
+    }
+}
+
+std::vector<std::pair<Airport, Airport>> Controller::findLongestShortestPathPairs() {
+    std::vector<std::vector<double>> dist(g.getNumVertex(), std::vector<double>(g.getNumVertex(), std::numeric_limits<double>::infinity()));
+    // Compute shortest paths using Dijkstra's algorithm
+    for (size_t i = 0; i < g.getNumVertex(); ++i) {
+        dijkstraShortestPaths(g.getVertexSet()[i], dist);
+    }
+
+    std::vector<std::pair<Airport, Airport>> maxRoutePairs;
+    int maxStops = 0;
+
+    // Perform DFS to explore all possible routes starting from each vertex
+    for (size_t i = 0; i < g.getNumVertex(); ++i) {
+        for (size_t j = 0; j < g.getNumVertex(); ++j) {
+            if (i != j) {
+                Vertex<Airport>* sourceVertex = g.getVertexSet()[i];
+                Airport destinationAirport = g.getVertexSet()[j]->getInfo();
+
+                // Mark the starting vertex as visited
+                sourceVertex->setVisited(true);
+
+                // Add the source vertex to the current route and recursively explore
+                std::vector<Airport> currentRoute = {sourceVertex->getInfo()};
+                findLongestPathDFS(sourceVertex, destinationAirport, currentRoute, maxRoutePairs, maxStops);
+
+                // Backtrack: remove the last added airport from the route
+                currentRoute.pop_back();
+
+                // Reset visited status after exploration
+                sourceVertex->setVisited(false);
+            }
+        }
+    }
+
+    return maxRoutePairs;
+}
+
+void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, Airport destination, std::vector<Airport>& currentRoute, std::vector<std::pair<Airport, Airport>>& maxRoutePairs, int& maxStops) {
+    // Check if the current route has more stops than the current maximum
+    if (currentRoute.size() - 1 > maxStops) {
+        maxStops = currentRoute.size() - 1;
+        maxRoutePairs.clear();  // Clear previous pairs since a longer route is found
+    }
+
+    // If the current route has the same number of stops as the current maximum, add the pair
+    if (currentRoute.size() - 1 == maxStops) {
+        maxRoutePairs.emplace_back(currentRoute.front(), currentRoute.back());
+    }
+
+    // Explore neighbors
+    for (const Edge<Airport>& edge : currentVertex->getAdj()) {
+        auto a = edge.getDest();
+
+        if (!a->isVisited()) {
+            a->setVisited(true);
+
+            // Add the neighbor to the current route and recursively explore
+            currentRoute.push_back(a->getInfo());
+            findLongestPathDFS(a, destination, currentRoute, maxRoutePairs, maxStops);  // Fix this line
+
+            // Backtrack: remove the last added airport from the route
+            currentRoute.pop_back();
+        }
+    }
+}
+
 
 void Controller::numDepartures(Airport a) {
     unordered_set<string> uniqueAirlines;
