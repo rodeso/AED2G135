@@ -97,10 +97,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a92b4f7ec29b55fd2ea981c095ffe1958"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a010b0f8b839d6dfc99e6e0edeeb6ad18" id="r_a010b0f8b839d6dfc99e6e0edeeb6ad18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#a010b0f8b839d6dfc99e6e0edeeb6ad18">topAirports</a> ()</td></tr>
 <tr class="separator:a010b0f8b839d6dfc99e6e0edeeb6ad18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a418568e41fad5d4e66fa3eddbee9d9a7" id="r_a418568e41fad5d4e66fa3eddbee9d9a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#a418568e41fad5d4e66fa3eddbee9d9a7">ArticulationPoints</a> () const</td></tr>
-<tr class="separator:a418568e41fad5d4e66fa3eddbee9d9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c44231ce9c5f02202af3c35bfb38742" id="r_a0c44231ce9c5f02202af3c35bfb38742"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; <a class="el" href="class_airport.html">Airport</a>, <a class="el" href="class_airport.html">Airport</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#a0c44231ce9c5f02202af3c35bfb38742">findLongestShortestPathPairs</a> ()</td></tr>
-<tr class="separator:a0c44231ce9c5f02202af3c35bfb38742"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb3037d2856f6b9bf0b43bcb145da32c" id="r_adb3037d2856f6b9bf0b43bcb145da32c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#adb3037d2856f6b9bf0b43bcb145da32c">articulationPoints</a> () const</td></tr>
+<tr class="separator:adb3037d2856f6b9bf0b43bcb145da32c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17c8724a8a0072244a95fa701c35b5ab" id="r_a17c8724a8a0072244a95fa701c35b5ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#a17c8724a8a0072244a95fa701c35b5ab">findHighestStopsPairs</a> () const</td></tr>
+<tr class="separator:a17c8724a8a0072244a95fa701c35b5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7046a153edc5f9cfd8ab9c0dbcae12b7" id="r_a7046a153edc5f9cfd8ab9c0dbcae12b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#a7046a153edc5f9cfd8ab9c0dbcae12b7">numDepartures</a> (<a class="el" href="class_airport.html">Airport</a> a)</td></tr>
 <tr class="separator:a7046a153edc5f9cfd8ab9c0dbcae12b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af23f7d0e629097615dcca182ae1d18d3" id="r_af23f7d0e629097615dcca182ae1d18d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#af23f7d0e629097615dcca182ae1d18d3">numArrivals</a> (<a class="el" href="class_airport.html">Airport</a> a)</td></tr>
@@ -157,20 +157,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>findLongestPathDFS</b
 <tr class="memdesc:a77a1bd80a305a1953c5b533f7afcca3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">DFS Auxiliary Function for findLongestPath Function. <br /></td></tr>
 <tr class="separator:a77a1bd80a305a1953c5b533f7afcca3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87c2fbafbf342eef1172edf13dbb64f4" id="r_a87c2fbafbf342eef1172edf13dbb64f4"><td class="memItemLeft" align="right" valign="top"><a id="a87c2fbafbf342eef1172edf13dbb64f4" name="a87c2fbafbf342eef1172edf13dbb64f4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ArticulationPointsDFS</b> (<a class="el" href="class_vertex.html">Vertex</a>&lt; <a class="el" href="class_airport.html">Airport</a> &gt; *currentVertex, set&lt; <a class="el" href="class_vertex.html">Vertex</a>&lt; <a class="el" href="class_airport.html">Airport</a> &gt; * &gt; &amp;articulationPoints, int &amp;time, <a class="el" href="class_vertex.html">Vertex</a>&lt; <a class="el" href="class_airport.html">Airport</a> &gt; *parent) const</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ArticulationPointsDFS</b> (<a class="el" href="class_vertex.html">Vertex</a>&lt; <a class="el" href="class_airport.html">Airport</a> &gt; *currentVertex, set&lt; <a class="el" href="class_vertex.html">Vertex</a>&lt; <a class="el" href="class_airport.html">Airport</a> &gt; * &gt; &amp;<a class="el" href="class_controller.html#adb3037d2856f6b9bf0b43bcb145da32c">articulationPoints</a>, int &amp;time, <a class="el" href="class_vertex.html">Vertex</a>&lt; <a class="el" href="class_airport.html">Airport</a> &gt; *parent) const</td></tr>
 <tr class="memdesc:a87c2fbafbf342eef1172edf13dbb64f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">DFS Auxiliary for Articulation Points. <br /></td></tr>
 <tr class="separator:a87c2fbafbf342eef1172edf13dbb64f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1716c6421f66bd2d5cd28f9ac9da20c9" id="r_a1716c6421f66bd2d5cd28f9ac9da20c9"><td class="memItemLeft" align="right" valign="top"><a id="a1716c6421f66bd2d5cd28f9ac9da20c9" name="a1716c6421f66bd2d5cd28f9ac9da20c9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>findLongestPathDFS</b> (<a class="el" href="class_vertex.html">Vertex</a>&lt; <a class="el" href="class_airport.html">Airport</a> &gt; *currentVertex, <a class="el" href="class_airport.html">Airport</a> destination, std::vector&lt; <a class="el" href="class_airport.html">Airport</a> &gt; &amp;currentRoute, std::vector&lt; std::pair&lt; <a class="el" href="class_airport.html">Airport</a>, <a class="el" href="class_airport.html">Airport</a> &gt; &gt; &amp;maxRoutePairs, int &amp;maxStops)</td></tr>
-<tr class="memdesc:a1716c6421f66bd2d5cd28f9ac9da20c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">DFS Auxiliary for Longest Trip. <br /></td></tr>
-<tr class="separator:a1716c6421f66bd2d5cd28f9ac9da20c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15c5294ad21df12c3a8912e8f8f05799" id="r_a15c5294ad21df12c3a8912e8f8f05799"><td class="memItemLeft" align="right" valign="top"><a id="a15c5294ad21df12c3a8912e8f8f05799" name="a15c5294ad21df12c3a8912e8f8f05799"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>dijkstraShortestPaths</b> (<a class="el" href="class_vertex.html">Vertex</a>&lt; <a class="el" href="class_airport.html">Airport</a> &gt; *source, std::vector&lt; vector&lt; double &gt; &gt; &amp;dist)</td></tr>
-<tr class="memdesc:a15c5294ad21df12c3a8912e8f8f05799"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dijkstra Algorithm. <br /></td></tr>
-<tr class="separator:a15c5294ad21df12c3a8912e8f8f05799"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0b62913929c5a21703acc8762bfdb80" id="r_ac0b62913929c5a21703acc8762bfdb80"><td class="memItemLeft" align="right" valign="top"><a id="ac0b62913929c5a21703acc8762bfdb80" name="ac0b62913929c5a21703acc8762bfdb80"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getCodeIndex</b> (const std::string &amp;code) const</td></tr>
-<tr class="separator:ac0b62913929c5a21703acc8762bfdb80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a405e1ae041d93322d1ccdffe892c3988" id="r_a405e1ae041d93322d1ccdffe892c3988"><td class="memItemLeft" align="right" valign="top"><a id="a405e1ae041d93322d1ccdffe892c3988" name="a405e1ae041d93322d1ccdffe892c3988"></a>
+vector&lt; <a class="el" href="class_airport.html">Airport</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>shortestPath</b> (const <a class="el" href="class_airport.html">Airport</a> &amp;source, const <a class="el" href="class_airport.html">Airport</a> &amp;destination) const</td></tr>
+<tr class="memdesc:a405e1ae041d93322d1ccdffe892c3988"><td class="mdescLeft">&#160;</td><td class="mdescRight">Djikstra. <br /></td></tr>
+<tr class="separator:a405e1ae041d93322d1ccdffe892c3988"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4927917ded0d308b148b1313fe908e51" id="r_a4927917ded0d308b148b1313fe908e51"><td class="memItemLeft" align="right" valign="top"><a id="a4927917ded0d308b148b1313fe908e51" name="a4927917ded0d308b148b1313fe908e51"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>haversine</b> (double lat1, double lon1, double lat2, double lon2)</td></tr>
 <tr class="memdesc:a4927917ded0d308b148b1313fe908e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Haversine Formula. <br /></td></tr>
@@ -227,14 +220,14 @@ unordered_map&lt; string, <a class="el" href="class_airline.html">Airline</a> &g
 
 </div>
 </div>
-<a id="a418568e41fad5d4e66fa3eddbee9d9a7" name="a418568e41fad5d4e66fa3eddbee9d9a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a418568e41fad5d4e66fa3eddbee9d9a7">&#9670;&#160;</a></span>ArticulationPoints()</h2>
+<a id="adb3037d2856f6b9bf0b43bcb145da32c" name="adb3037d2856f6b9bf0b43bcb145da32c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb3037d2856f6b9bf0b43bcb145da32c">&#9670;&#160;</a></span>articulationPoints()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Controller::ArticulationPoints </td>
+          <td class="memname">void Controller::articulationPoints </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -310,6 +303,24 @@ unordered_map&lt; string, <a class="el" href="class_airline.html">Airline</a> &g
 
 </div>
 </div>
+<a id="a17c8724a8a0072244a95fa701c35b5ab" name="a17c8724a8a0072244a95fa701c35b5ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17c8724a8a0072244a95fa701c35b5ab">&#9670;&#160;</a></span>findHighestStopsPairs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Controller::findHighestStopsPairs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows Longest <a class="el" href="class_flight.html">Flight</a> Path Pair O(V^2) </p>
+
+</div>
+</div>
 <a id="a92b4f7ec29b55fd2ea981c095ffe1958" name="a92b4f7ec29b55fd2ea981c095ffe1958"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a92b4f7ec29b55fd2ea981c095ffe1958">&#9670;&#160;</a></span>findLongestPath()</h2>
 
@@ -325,24 +336,6 @@ unordered_map&lt; string, <a class="el" href="class_airline.html">Airline</a> &g
       </table>
 </div><div class="memdoc">
 <p>Shows the Trip with the most Stops O(V + E) </p>
-
-</div>
-</div>
-<a id="a0c44231ce9c5f02202af3c35bfb38742" name="a0c44231ce9c5f02202af3c35bfb38742"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c44231ce9c5f02202af3c35bfb38742">&#9670;&#160;</a></span>findLongestShortestPathPairs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; std::pair&lt; <a class="el" href="class_airport.html">Airport</a>, <a class="el" href="class_airport.html">Airport</a> &gt; &gt; Controller::findLongestShortestPathPairs </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Shows Longest <a class="el" href="class_flight.html">Flight</a> Path Pair O(V^2) </p>
 
 </div>
 </div>
