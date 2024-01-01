@@ -688,79 +688,55 @@ void Controller::findLongestPath() {
     cout << "\n";
 }
 void Controller::ArticulationPoints() const {
-    Graph<Airport> gCopy = g;
-    set<Vertex<Airport>*> articulationPoints;
-    for (auto v : gCopy.getVertexSet()) {
-        for (auto e : v->getAdj()) {
-            gCopy.addEdge(e.getDest()->getInfo(), v->getInfo(), 0, Airline());
-        }
-    }
+    set<Vertex<Airport>*> articulationPoints; // Set to store articulation points
+    int time = 0; // Time variable for DFS traversal
 
-    // Mark all vertices as not visited
-    for (auto v : gCopy.getVertexSet()) {
+    // Reset visited flags for all vertices
+    for (Vertex<Airport>* v : g.getVertexSet()) {
         v->setVisited(false);
     }
 
-    // Perform DFS and find articulation points
-    int time = 0; // To store discovery times of vertices
-    for (auto v : gCopy.getVertexSet()) {
+    // Perform DFS traversal to find articulation points
+    for (Vertex<Airport>* v : g.getVertexSet()) {
         if (!v->isVisited()) {
             ArticulationPointsDFS(v, articulationPoints, time, nullptr);
         }
     }
 
-    // Print the articulation points
-    cout << "Articulation Points:\n";
-    for (auto point : articulationPoints) {
-        cout << point->getInfo().getCode() << "\n";
+    // Display the articulation points
+    cout << "Articulation Points (Airports that, when removed, create unreachable destinations):" << endl;
+    for (Vertex<Airport>* ap : articulationPoints) {
+        cout << ap->getInfo().getCode() << endl;
     }
-    cout << " Count: " << articulationPoints.size() << endl;
+    cout << "Total: " << articulationPoints.size();
 }
 
 void Controller::ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Vertex<Airport>*>& articulationPoints, int& time, Vertex<Airport>* parent) const {
-    // Mark the current vertex as visited
     currentVertex->setVisited(true);
+    currentVertex->setNum(time);
+    currentVertex->setLow(time);
+    time++;
 
-    // Initialize discovery time and low value
-    int discoveryTime = ++time;
-    int low = discoveryTime;
-
-    // Count of children in DFS tree
     int children = 0;
 
-    // Iterate over all neighbors of the current vertex
-    for (const auto& edge : currentVertex->getAdj()) {
-        Vertex<Airport>* neighborVertex = edge.getDest();
+    for (Edge<Airport> e : currentVertex->getAdj()) {
+        Vertex<Airport>* w = e.getDest();
 
-        // Skip processing the parent
-        if (neighborVertex == parent) {
-            continue;
-        }
-
-        // If the neighbor is not visited, process it
-        if (!neighborVertex->isVisited()) {
+        if (!w->isVisited()) {
             children++;
-            ArticulationPointsDFS(neighborVertex, articulationPoints, time, currentVertex);
+            ArticulationPointsDFS(w, articulationPoints, time, currentVertex);
 
-            // Check if the subtree rooted with neighbor has a back edge to an ancestor of currentVertex
-            low = min(low, neighborVertex->getLow());
+            currentVertex->setLow(min(currentVertex->getLow(), w->getLow()));
 
-            // Check if the current vertex is an articulation point
-            if (neighborVertex->getLow() >= discoveryTime && parent != nullptr) {
+            if (parent == nullptr && children > 1) {
                 articulationPoints.insert(currentVertex);
             }
-        } else {
-            // Update low value for the case where the neighbor is visited and is not the parent
-            low = min(low, neighborVertex->getNum());
+            if (parent != nullptr && w->getLow() >= currentVertex->getNum()) {
+                articulationPoints.insert(currentVertex);
+            }
+        } else if (w != parent) {
+            currentVertex->setLow(min(currentVertex->getLow(), w->getNum()));
         }
-    }
-
-    // Update low value for the current vertex
-    currentVertex->setLow(low);
-
-    // If the current vertex is the root and has more than one child, it's an articulation point
-    if (parent == nullptr && children > 1) {
-        articulationPoints.insert(currentVertex);
     }
 }
 
