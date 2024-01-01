@@ -127,16 +127,7 @@ void Controller::displayMenu() {
                             sleep(3);
                             break;
                         case 7:
-                            longestPairs = findLongestShortestPathPairs();
-
-                            if (longestPairs.empty()) {
-                                std::cout << "No longest routes found among the shortest paths.\n";
-                            } else {
-                                std::cout << "Longest routes among the shortest paths:\n";
-                                for (const auto& pair : longestPairs) {
-                                    std::cout << pair.first.getCode() << " -> " << pair.second.getCode() << "\n";
-                                }
-                            }
+                            findLongestPathPairs();
                             sleep(3);
                             break;
                         default:
@@ -688,55 +679,64 @@ void Controller::findLongestPath() {
     cout << "\n";
 }
 void Controller::ArticulationPoints() const {
-    set<Vertex<Airport>*> articulationPoints; // Set to store articulation points
-    int time = 0; // Time variable for DFS traversal
-
-    // Reset visited flags for all vertices
-    for (Vertex<Airport>* v : g.getVertexSet()) {
+    set<Vertex<Airport>*> articulationPoints;
+    Graph<Airport> g2 = g;
+    for (auto v : g2.getVertexSet()) {
+        for (auto e : v->getAdj()) {
+            g2.addEdge(e.getDest()->getInfo(),v->getInfo(), 0, Airline());
+        }
+    }
+    for (Vertex<Airport>* v : g2.getVertexSet()) {
         v->setVisited(false);
+        v->setProcessing(false);
     }
 
-    // Perform DFS traversal to find articulation points
-    for (Vertex<Airport>* v : g.getVertexSet()) {
+    int time = 0; // Time for DFS traversal
+
+    for (Vertex<Airport>* v : g2.getVertexSet()) {
         if (!v->isVisited()) {
             ArticulationPointsDFS(v, articulationPoints, time, nullptr);
         }
     }
 
-    // Display the articulation points
-    cout << "Articulation Points (Airports that, when removed, create unreachable destinations):" << endl;
-    for (Vertex<Airport>* ap : articulationPoints) {
-        cout << ap->getInfo().getCode() << endl;
+    // Print the number of articulation points and their information
+    cout << "Articulation Points:" << endl;
+    for (Vertex<Airport>* v : articulationPoints) {
+        cout << "Airport: " << v->getInfo().getName() << ", Code: " << v->getInfo().getCode() << endl;
     }
-    cout << "Total: " << articulationPoints.size();
+    cout << "Number of Articulation Points: " << articulationPoints.size() << endl;
 }
 
 void Controller::ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Vertex<Airport>*>& articulationPoints, int& time, Vertex<Airport>* parent) const {
     currentVertex->setVisited(true);
+    currentVertex->setProcessing(true);
     currentVertex->setNum(time);
     currentVertex->setLow(time);
     time++;
 
     int children = 0;
 
-    for (Edge<Airport> e : currentVertex->getAdj()) {
-        Vertex<Airport>* w = e.getDest();
+    for (Edge<Airport> edge : currentVertex->getAdj()) {
+        Vertex<Airport>* neighborVertex = edge.getDest();
 
-        if (!w->isVisited()) {
+        if (!neighborVertex->isVisited()) {
             children++;
-            ArticulationPointsDFS(w, articulationPoints, time, currentVertex);
+            ArticulationPointsDFS(neighborVertex, articulationPoints, time, currentVertex);
 
-            currentVertex->setLow(min(currentVertex->getLow(), w->getLow()));
+            currentVertex->setLow(min(currentVertex->getLow(), neighborVertex->getLow()));
 
-            if (parent == nullptr && children > 1) {
+            if (currentVertex->getNum() <= neighborVertex->getLow() && parent != nullptr) {
                 articulationPoints.insert(currentVertex);
             }
-            if (parent != nullptr && w->getLow() >= currentVertex->getNum()) {
-                articulationPoints.insert(currentVertex);
-            }
-        } else if (w != parent) {
-            currentVertex->setLow(min(currentVertex->getLow(), w->getNum()));
+        } else if (neighborVertex != parent) {
+            currentVertex->setLow(min(currentVertex->getLow(), neighborVertex->getNum()));
         }
+    }
+
+    currentVertex->setProcessing(false);
+
+    if (parent == nullptr && children > 1) {
+        articulationPoints.insert(currentVertex);
     }
 }
 
@@ -781,95 +781,72 @@ void Controller::topAirports() {
     }
     cout << "=====================================\n";
 }
-size_t Controller::getCodeIndex(const std::string& code) const {
-    return static_cast<size_t>(code[0] - 'A') * 26 * 26 + static_cast<size_t>(code[1] - 'A') * 26 + static_cast<size_t>(code[2] - 'A');
-}
-void Controller::dijkstraShortestPaths(Vertex<Airport>* source, std::vector<std::vector<double>>& dist) {
-    std::priority_queue<std::pair<double, Vertex<Airport>*>, std::vector<std::pair<double, Vertex<Airport>*>>, std::greater<>> pq;
-    pq.push({0.0, source});
-    dist[getCodeIndex(source->getInfo().getCode())][getCodeIndex(source->getInfo().getCode())] = 0.0;
-
-    while (!pq.empty()) {
-        double currentDist = pq.top().first;
-        Vertex<Airport>* currentVertex = pq.top().second;
-        pq.pop();
-
-        for (const Edge<Airport>& edge : currentVertex->getAdj()) {
-            Airport neighborAirport = edge.getDest()->getInfo();
-            double weight = edge.getWeight();
-
-            if (currentDist + weight < dist[getCodeIndex(currentVertex->getInfo().getCode())][getCodeIndex(neighborAirport.getCode())]) {
-                dist[getCodeIndex(currentVertex->getInfo().getCode())][getCodeIndex(neighborAirport.getCode())] = currentDist + weight;
-                pq.push({currentDist + weight, edge.getDest()});
-            }
-        }
-    }
-}
-
-std::vector<std::pair<Airport, Airport>> Controller::findLongestShortestPathPairs() {
-    std::vector<std::vector<double>> dist(g.getNumVertex(), std::vector<double>(g.getNumVertex(), std::numeric_limits<double>::infinity()));
-    // Compute shortest paths using Dijkstra's algorithm
-    for (size_t i = 0; i < g.getNumVertex(); ++i) {
-        dijkstraShortestPaths(g.getVertexSet()[i], dist);
-    }
-
-    std::vector<std::pair<Airport, Airport>> maxRoutePairs;
+void Controller::findLongestPathPairs() {
+    // Initialize variables to store the result
     int maxStops = 0;
+    vector<pair<Airport, Airport>> maxRoutePairs;
 
-    // Perform DFS to explore all possible routes starting from each vertex
-    for (size_t i = 0; i < g.getNumVertex(); ++i) {
-        for (size_t j = 0; j < g.getNumVertex(); ++j) {
-            if (i != j) {
-                Vertex<Airport>* sourceVertex = g.getVertexSet()[i];
-                Airport destinationAirport = g.getVertexSet()[j]->getInfo();
+    // Iterate through all pairs of source-destination airports
+    for (Vertex<Airport>* sourceVertex : g.getVertexSet()) {
+        for (Vertex<Airport>* destVertex : g.getVertexSet()) {
+            if (sourceVertex != destVertex) {
+                // Reset visited flags and colors
+                for (Vertex<Airport>* v : g.getVertexSet()) {
+                    v->setVisited(false);
+                    v->setProcessing(false);
+                }
 
-                // Mark the starting vertex as visited
-                sourceVertex->setVisited(true);
+                // Perform DFS to find the shortest route between source and destination
+                vector<Airport> currentRoute;
+                findLongestPathDFS(sourceVertex, destVertex->getInfo(), currentRoute, maxRoutePairs, maxStops);
 
-                // Add the source vertex to the current route and recursively explore
-                std::vector<Airport> currentRoute = {sourceVertex->getInfo()};
-                findLongestPathDFS(sourceVertex, destinationAirport, currentRoute, maxRoutePairs, maxStops);
-
-                // Backtrack: remove the last added airport from the route
-                currentRoute.pop_back();
-
-                // Reset visited status after exploration
-                sourceVertex->setVisited(false);
+                // Print the pairs with the largest number of stops
+                cout << "Source: " << sourceVertex->getInfo().getName() << ", Destination: " << destVertex->getInfo().getName()
+                     << ", Stops: " << maxStops << endl;
+                for (const auto& pair : maxRoutePairs) {
+                    cout << "    Stopover: " << pair.first.getName() << " to " << pair.second.getName() << endl;
+                }
+                cout << endl;
             }
         }
     }
-
-    return maxRoutePairs;
 }
 
-void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, Airport destination, std::vector<Airport>& currentRoute, std::vector<std::pair<Airport, Airport>>& maxRoutePairs, int& maxStops) {
-    // Check if the current route has more stops than the current maximum
-    if (currentRoute.size() - 1 > maxStops) {
-        maxStops = currentRoute.size() - 1;
-        maxRoutePairs.clear();  // Clear previous pairs since a longer route is found
-    }
 
-    // If the current route has the same number of stops as the current maximum, add the pair
-    if (currentRoute.size() - 1 == maxStops) {
-        maxRoutePairs.emplace_back(currentRoute.front(), currentRoute.back());
-    }
+void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, Airport destination,
+                                    vector<Airport>& currentRoute,
+                                    vector<pair<Airport, Airport>>& maxRoutePairs, int& maxStops) {
+    currentVertex->setProcessing(true);
 
-    // Explore neighbors
-    for (const Edge<Airport>& edge : currentVertex->getAdj()) {
-        auto a = edge.getDest();
+    // Perform DFS only if the vertex is not yet visited
+    if (!currentVertex->isVisited()) {
+        currentVertex->setVisited(true);
+        currentRoute.push_back(currentVertex->getInfo());
 
-        if (!a->isVisited()) {
-            a->setVisited(true);
-
-            // Add the neighbor to the current route and recursively explore
-            currentRoute.push_back(a->getInfo());
-            findLongestPathDFS(a, destination, currentRoute, maxRoutePairs, maxStops);  // Fix this line
-
-            // Backtrack: remove the last added airport from the route
-            currentRoute.pop_back();
+        if (currentVertex->getInfo() == destination) {
+            // Found a route to the destination
+            if (currentRoute.size() - 1 > maxStops) { // Subtract 1 to get the number of stops
+                maxStops = currentRoute.size() - 1;
+                maxRoutePairs.clear();
+                for (size_t i = 0; i < currentRoute.size() - 1; ++i) {
+                    maxRoutePairs.emplace_back(currentRoute[i], currentRoute[i + 1]);
+                }
+            }
+        } else {
+            for (Edge<Airport> edge : currentVertex->getAdj()) {
+                Vertex<Airport>* neighborVertex = edge.getDest();
+                if (!neighborVertex->isProcessing()) {
+                    findLongestPathDFS(neighborVertex, destination, currentRoute, maxRoutePairs, maxStops);
+                }
+            }
         }
+
+        currentRoute.pop_back();
     }
+
+    currentVertex->setProcessing(false);
 }
+
 
 
 void Controller::numDepartures(Airport a) {

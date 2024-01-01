@@ -70,11 +70,8 @@ private:
     /// DFS Auxiliary for Articulation Points
     void ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Vertex<Airport>*>& articulationPoints, int& time, Vertex<Airport>* parent) const;
     /// DFS Auxiliary for Longest Trip
-    void findLongestPathDFS(Vertex<Airport>* currentVertex, Airport destination, std::vector<Airport>& currentRoute, std::vector<std::pair<Airport, Airport>>& maxRoutePairs, int& maxStops);
-    /// Dijkstra Algorithm
-    void dijkstraShortestPaths(Vertex<Airport>* source, std::vector<vector<double>>& dist);
-    size_t getCodeIndex(const std::string& code) const;
-        /// Haversine Formula
+    void findLongestPathDFS(Vertex<Airport>* currentVertex, Airport destination,vector<Airport>& currentRoute,vector<pair<Airport, Airport>>& maxRoutePairs, int& maxStops);
+    /// Haversine Formula
     double haversine(double lat1, double lon1, double lat2, double lon2);
     /// Main Data Structure for the Program
     Graph<Airport> g;
@@ -104,7 +101,7 @@ public:
     void ArticulationPoints() const;
     /// Shows Longest Flight Path Pair
     ///  O(V^2)
-    std::vector<std::pair<Airport, Airport>> findLongestShortestPathPairs();
+    void findLongestPathPairs();
     /// Calculates the Departing Flights Number from a given Airport
     ///  O(outgoing edges)
     void numDepartures(Airport a);
