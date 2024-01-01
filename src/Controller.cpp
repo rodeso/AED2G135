@@ -3,6 +3,7 @@
 
 Controller::Controller() {
     // Specify the file paths for your CSV files
+    // *!* PLEASE CHANGE THESE TO THE CORRECT PATH *!*
     string airportsFile = "../csv/airports.csv";
     string airlinesFile = "../csv/airlines.csv";
     string flightsFile = "../csv/flights.csv";
@@ -123,11 +124,11 @@ void Controller::displayMenu() {
                             sleep(3);
                             break;
                         case 6:
-                            ArticulationPoints();
+                            articulationPoints();
                             sleep(3);
                             break;
                         case 7:
-                            findLongestPathPairs();
+                            findHighestStopsPairs();
                             sleep(3);
                             break;
                         default:
@@ -268,8 +269,8 @@ void Controller::displayMenu() {
                     cout << "1. Number of Flights\n ";
                     cout << "2. Flights From a Location\n ";
                     cout << "3. Flights To a Location\n ";
-                    cout << "4. Top X Airports (Departures)\n "; //TODO
-                    cout << "5. Top X Airports (Arrivals)\n ";   //TODO
+                    cout << "4. Top X Airports (Departures)\n ";
+                    cout << "5. Top X Airports (Arrivals)\n ";
                     cout << "6. Flight Availability\n ";
                     cout << "0. Go Back ";
                     cout << "\n=====================================\n";
@@ -621,46 +622,35 @@ void Controller::numFlights() {
     cout << "                " << n << "\n=====================================\n";
 }
 void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, vector<Airport>& currentRoute, int& maxStops, vector<Airport>& maxRoute) {
-    // Check if the current route has more stops than the current maximum
     if (currentRoute.size() - 1 > maxStops) {
         maxStops = currentRoute.size() - 1;
         maxRoute = currentRoute;
     }
 
-    // Mark the vertex as grey (being processed)
     currentVertex->setProcessing(true);
 
-    // Explore neighbors
     for (const auto& edge : currentVertex->getAdj()) {
         Vertex<Airport>* neighborVertex = edge.getDest();
 
         if (!neighborVertex->isVisited()) {
-            // Mark the neighbor as visited and add to the current route
             neighborVertex->setVisited(true);
             currentRoute.push_back(neighborVertex->getInfo());
-
-            // Recursively explore the neighbor
             findLongestPathDFS(neighborVertex, currentRoute, maxStops, maxRoute);
-
-            // Backtrack: remove the last added airport from the route
             currentRoute.pop_back();
         }
     }
 
-    // Mark the vertex as black (visited and processed)
     currentVertex->setVisited(true);
     currentVertex->setProcessing(false);
 }
 
 void Controller::findLongestPath() {
-    // Initialize variables to track the maximum trip
     for (auto v : g.getVertexSet()) {
         v->setVisited(false);
     }
     int maxStops = 0;
     vector<Airport> maxRoute;
 
-    // Perform DFS to explore all possible routes starting from each white (unvisited) vertex
     for (auto v : g.getVertexSet()) {
         if (!v->isVisited()) {
             vector<Airport> currentRoute = {v->getInfo()};
@@ -671,14 +661,49 @@ void Controller::findLongestPath() {
     for (auto v : g.getVertexSet()) {
         v->setVisited(false);
     }
-    // Print the result
     cout << "Maximum trip from " << maxRoute[0].getCode() << " to " << maxRoute[maxRoute.size()-1].getCode() << " with " << maxStops << " stops:\n";
     for (const auto& airport : maxRoute) {
         cout << airport.getCode() << " -> ";
     }
     cout << "\n";
 }
-void Controller::ArticulationPoints() const {
+void Controller::topAirports() {
+    int x;
+    cout << "X: ";
+    cin >> x;
+    vector<pair<Airport, int>> airportDegrees;
+
+    for (const auto &vertex : g.getVertexSet()) {
+        int inDegree = 0;
+        int outDegree = vertex->getAdj().size();
+
+        for (const auto &v : g.getVertexSet()) {
+            for (const auto &edge : v->getAdj()) {
+                if (edge.getDest() == vertex) {
+                    ++inDegree;
+                }
+            }
+        }
+
+        int totalDegree = inDegree + outDegree;
+        airportDegrees.emplace_back(vertex->getInfo(), totalDegree);
+    }
+
+    sort(airportDegrees.begin(), airportDegrees.end(),
+         [](const auto &a, const auto &b) {
+             return a.second > b.second;
+         });
+
+    cout << "\n============ Top Airports ===========\n";
+    for (int i = 0; i < min(x, static_cast<int>(airportDegrees.size())); ++i) {
+        const Airport &airport = airportDegrees[i].first;
+        int totalDegree = airportDegrees[i].second;
+        cout << " " << i + 1 << ": " << airport.getCity() << ", " << airport.getCountry()
+             << " (" << airport.getCode() << ") - Total Flights: " << totalDegree << "\n";
+    }
+    cout << "=====================================\n";
+}
+void Controller::articulationPoints() const {
     set<Vertex<Airport>*> articulationPoints;
     Graph<Airport> g2 = g;
     for (auto v : g2.getVertexSet()) {
@@ -691,7 +716,7 @@ void Controller::ArticulationPoints() const {
         v->setProcessing(false);
     }
 
-    int time = 0; // Time for DFS traversal
+    int time = 0;
 
     for (Vertex<Airport>* v : g2.getVertexSet()) {
         if (!v->isVisited()) {
@@ -699,12 +724,13 @@ void Controller::ArticulationPoints() const {
         }
     }
 
-    // Print the number of articulation points and their information
-    cout << "Articulation Points:" << endl;
+    cout << "\n======== Essential Airports =========\n";
     for (Vertex<Airport>* v : articulationPoints) {
-        cout << "Airport: " << v->getInfo().getName() << ", Code: " << v->getInfo().getCode() << endl;
+        cout << " Airport: " << v->getInfo().getName() << ", Code: " << v->getInfo().getCode() << endl;
     }
-    cout << "Number of Articulation Points: " << articulationPoints.size() << endl;
+    cout << "\n======== Essential Airports N =======\n ";
+    cout << "                  " << articulationPoints.size();
+    cout << "\n=====================================\n";
 }
 
 void Controller::ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Vertex<Airport>*>& articulationPoints, int& time, Vertex<Airport>* parent) const {
@@ -739,114 +765,95 @@ void Controller::ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Verte
         articulationPoints.insert(currentVertex);
     }
 }
+vector<Airport> Controller::shortestPath(const Airport& source, const Airport& destination) const {
+    priority_queue<pair<double, Vertex<Airport>*>, vector<pair<double, Vertex<Airport>*>>, greater<>> pq;
+    unordered_map<Airport, double> distance;
+    unordered_map<Airport, Vertex<Airport>*> previous;
 
-void Controller::topAirports() {
-    int x;
-    cout << "X: ";
-    cin >> x;
-    // Data structure to store total degree of each airport
-    vector<pair<Airport, int>> airportDegrees;
+    Vertex<Airport>* sourceVertex = g.findVertex(source);
+    Vertex<Airport>* destinationVertex = g.findVertex(destination);
 
-    // Iterate through all airports and calculate total degree
-    for (const auto &vertex : g.getVertexSet()) {
-        int inDegree = 0;
-        int outDegree = vertex->getAdj().size();
+    if (!sourceVertex || !destinationVertex) {
+        return vector<Airport>();
+    }
 
-        // Calculate in-degree by traversing all vertices
-        for (const auto &v : g.getVertexSet()) {
-            for (const auto &edge : v->getAdj()) {
-                if (edge.getDest() == vertex) {
-                    ++inDegree;
-                }
-            }
+    for (const auto& vertex : g.getVertexSet()) {
+        if (vertex == sourceVertex)
+            distance[vertex->getInfo()] = 0;
+        else
+            distance[vertex->getInfo()] = numeric_limits<double>::infinity();
+        previous[vertex->getInfo()] = nullptr;
+        pq.push({distance[vertex->getInfo()], vertex});
+    }
+
+    while (!pq.empty()) {
+        auto currentPair = pq.top();
+        pq.pop();
+        auto current = currentPair.second;
+
+        if (current->isVisited()) {
+            continue;
         }
 
-        int totalDegree = inDegree + outDegree;
-        airportDegrees.emplace_back(vertex->getInfo(), totalDegree);
-    }
+        current->setVisited(true);
 
-    // Sort airports based on total degree in descending order
-    sort(airportDegrees.begin(), airportDegrees.end(),
-              [](const auto &a, const auto &b) {
-                  return a.second > b.second;
-              });
+        for (const auto& edge : current->getAdj()) {
+            auto neighbor = edge.getDest();
+            double newDistance = distance[current->getInfo()] + edge.getWeight();
 
-    // Print the top X airports
-    cout << "\n============ Top Airports ===========\n";
-    for (int i = 0; i < min(x, static_cast<int>(airportDegrees.size())); ++i) {
-        const Airport &airport = airportDegrees[i].first;
-        int totalDegree = airportDegrees[i].second;
-        cout << " " << i + 1 << ": " << airport.getCity() << ", " << airport.getCountry()
-                  << " (" << airport.getCode() << ") - Total Flights: " << totalDegree << "\n";
-    }
-    cout << "=====================================\n";
-}
-void Controller::findLongestPathPairs() {
-    // Initialize variables to store the result
-    int maxStops = 0;
-    vector<pair<Airport, Airport>> maxRoutePairs;
-
-    // Iterate through all pairs of source-destination airports
-    for (Vertex<Airport>* sourceVertex : g.getVertexSet()) {
-        for (Vertex<Airport>* destVertex : g.getVertexSet()) {
-            if (sourceVertex != destVertex) {
-                // Reset visited flags and colors
-                for (Vertex<Airport>* v : g.getVertexSet()) {
-                    v->setVisited(false);
-                    v->setProcessing(false);
-                }
-
-                // Perform DFS to find the shortest route between source and destination
-                vector<Airport> currentRoute;
-                findLongestPathDFS(sourceVertex, destVertex->getInfo(), currentRoute, maxRoutePairs, maxStops);
-
-                // Print the pairs with the largest number of stops
-                cout << "Source: " << sourceVertex->getInfo().getName() << ", Destination: " << destVertex->getInfo().getName()
-                     << ", Stops: " << maxStops << endl;
-                for (const auto& pair : maxRoutePairs) {
-                    cout << "    Stopover: " << pair.first.getName() << " to " << pair.second.getName() << endl;
-                }
-                cout << endl;
+            if (newDistance < distance[neighbor->getInfo()]) {
+                distance[neighbor->getInfo()] = newDistance;
+                previous[neighbor->getInfo()] = current;
+                pq.push({newDistance, neighbor});
             }
         }
     }
+
+    for (const auto& vertex : g.getVertexSet()) {
+        vertex->setVisited(false);
+    }
+
+    vector<Airport> path;
+    auto current = destinationVertex;
+
+    while (current != nullptr) {
+        path.push_back(current->getInfo());
+        current = previous[current->getInfo()];
+    }
+
+    reverse(path.begin(), path.end());
+    return path;
 }
 
+void Controller::findHighestStopsPairs() const {
+    int maxStops = -1;
+    vector<pair<Airport, Airport>> maxStopsPairs;
 
-void Controller::findLongestPathDFS(Vertex<Airport>* currentVertex, Airport destination,
-                                    vector<Airport>& currentRoute,
-                                    vector<pair<Airport, Airport>>& maxRoutePairs, int& maxStops) {
-    currentVertex->setProcessing(true);
+    for (const auto& vertex : g.getVertexSet()) {
+        vertex->setVisited(false);
+    }
 
-    // Perform DFS only if the vertex is not yet visited
-    if (!currentVertex->isVisited()) {
-        currentVertex->setVisited(true);
-        currentRoute.push_back(currentVertex->getInfo());
+    for (const auto& source : g.getVertexSet()) {
+        for (const auto& destination : g.getVertexSet()) {
+            if (source != destination) {
+                vector<Airport> path = shortestPath(source->getInfo(), destination->getInfo());
 
-        if (currentVertex->getInfo() == destination) {
-            // Found a route to the destination
-            if (currentRoute.size() - 1 > maxStops) { // Subtract 1 to get the number of stops
-                maxStops = currentRoute.size() - 1;
-                maxRoutePairs.clear();
-                for (size_t i = 0; i < currentRoute.size() - 1; ++i) {
-                    maxRoutePairs.emplace_back(currentRoute[i], currentRoute[i + 1]);
-                }
-            }
-        } else {
-            for (Edge<Airport> edge : currentVertex->getAdj()) {
-                Vertex<Airport>* neighborVertex = edge.getDest();
-                if (!neighborVertex->isProcessing()) {
-                    findLongestPathDFS(neighborVertex, destination, currentRoute, maxRoutePairs, maxStops);
+                if (!path.empty() && path.size() - 1 > maxStops) {
+                    maxStops = path.size() - 1;
+                    maxStopsPairs.clear();
+                    maxStopsPairs.emplace_back(source->getInfo(), destination->getInfo());
+                } else if (!path.empty() && path.size() - 1 == maxStops) {
+                    maxStopsPairs.emplace_back(source->getInfo(), destination->getInfo());
                 }
             }
         }
-
-        currentRoute.pop_back();
     }
 
-    currentVertex->setProcessing(false);
+    cout << "Pairs with the highest number of stops (" << maxStops << " stops):" << endl;
+    for (const auto& pair : maxStopsPairs) {
+        cout << "Source: " << pair.first.getCode() << " - Destination: " << pair.second.getCode() << endl;
+    }
 }
-
 
 
 void Controller::numDepartures(Airport a) {
@@ -883,8 +890,8 @@ void Controller::numArrivals(Airport a) {
 void Controller::showDestinations(Airport a) {
     cout << "\n============ Destinations ===========\n ";
     auto v = g.findVertex(a);
-    set<string> visitedDestinations;  // Use a set to store unique destinations
-    set<string> visitedCountries;     // Use a set to store unique countries
+    set<string> visitedDestinations;
+    set<string> visitedCountries;
 
     for (auto u : v->getAdj()) {
         const Airport &destination = u.getDest()->getInfo();
@@ -897,7 +904,6 @@ void Controller::showDestinations(Airport a) {
         }
 
         if (visitedCountries.find(destination.getCountry()) == visitedCountries.end()) {
-            // Print unique countries
             visitedCountries.insert(destination.getCountry());
         }
     }
@@ -907,7 +913,7 @@ void Controller::showDestinations(Airport a) {
 
 void Controller::showArrivals(Airport a) {
     cout << "\n============ Arriving Flights ===========\n ";
-    set<string> visitedOrigins; // Use a set to store unique origins
+    set<string> visitedOrigins;
 
     for (const auto &vertex : g.getVertexSet()) {
         for (const auto &edge : vertex->getAdj()) {
@@ -920,17 +926,16 @@ void Controller::showArrivals(Airport a) {
                     cout << origin.getCity() << ", " << origin.getCountry() << " (" << origin.getCode() << ")\n ";
                     visitedOrigins.insert(originInfo);
                 }
-                break; // Break to avoid printing the same origin multiple times for different incoming edges.
+                break;
             }
         }
     }
 
-    set<string> visitedCountries; // Use a set to store unique countries
+    set<string> visitedCountries;
 
     for (const auto &origin : visitedOrigins) {
         const Airport &originAirport = airportHashTable.find(origin.substr(origin.size() - 3))->second;
         if (visitedCountries.find(originAirport.getCountry()) == visitedCountries.end()) {
-            // Print unique countries
             visitedCountries.insert(originAirport.getCountry());
         }
     }
@@ -1049,7 +1054,6 @@ void Controller::possibleDestinations(const Airport& chosenSource, int maxLayove
         Airport currentAirport = front.first;
         int layovers = front.second;
 
-        // Mark the current airport as visited
         visitedAirports.insert(currentAirport);
         visitedCities.insert(currentAirport.getCity());
         visitedCountries.insert(currentAirport.getCountry());
@@ -1063,8 +1067,6 @@ void Controller::possibleDestinations(const Airport& chosenSource, int maxLayove
 
                 if (!edge.getDest()->isVisited()) {
                     q.push({neighborAirport, layovers + 1});
-
-                    // Mark the neighbor airport as visited
                     edge.getDest()->setVisited(true);
                 }
             }
@@ -1095,7 +1097,6 @@ vector<Airport> Controller::BFSWithLayovers(const Airport& source, const Airport
         Airport currentAirport = front.first;
         const vector<Airport>& currentRoute = front.second;
 
-        // Check if the current airport is the destination
         if (currentAirport == destination && currentRoute.size() - 2 <= maxLayovers) {
             cout << "Found a flight with " << currentRoute.size() - 2 << " layovers to " << destination.getCode() << "\n";
             cout << "Route: ";
@@ -1107,7 +1108,6 @@ vector<Airport> Controller::BFSWithLayovers(const Airport& source, const Airport
             res.push_back(destination);
         }
 
-        // Enqueue neighboring airports
         for (const auto& neighbor : g.findVertex(currentAirport)->getAdj()) {
             auto it = find(visited.begin(), visited.end(), neighbor.getDest()->getInfo());
             if (it == visited.end()) {
@@ -1207,14 +1207,11 @@ void Controller::topAirportsDepartures(Airline a){
     int x;
     cout << "X: ";
     cin >> x;
-    // Data structure to store total degree of each airport
     vector<pair<Airport, int>> airportDegrees;
 
-    // Iterate through all airports and calculate total degree
     for (const auto &vertex : g.getVertexSet()) {
         int outDegree = 0;
 
-        // Calculate out-degree by traversing all edges
         for (const auto &edge : vertex->getAdj()) {
             if (edge.getAirline() == a) {
                 ++outDegree;
@@ -1224,13 +1221,11 @@ void Controller::topAirportsDepartures(Airline a){
         airportDegrees.emplace_back(vertex->getInfo(), outDegree);
     }
 
-    // Sort airports based on total degree in descending order
     sort(airportDegrees.begin(), airportDegrees.end(),
               [](const auto &a, const auto &b) {
                   return a.second > b.second;
               });
 
-    // Print the top X airports
     cout << "\n============ Top Airports ===========\n";
     for (int i = 0; i < min(x, static_cast<int>(airportDegrees.size())); ++i) {
         const Airport &airport = airportDegrees[i].first;
@@ -1245,14 +1240,11 @@ void Controller::topAirportsArrivals(Airline a){
     int x;
     cout << "X: ";
     cin >> x;
-    // Data structure to store total degree of each airport
     vector<pair<Airport, int>> airportDegrees;
 
-    // Iterate through all airports and calculate total degree
     for (const auto &vertex : g.getVertexSet()) {
         int inDegree = 0;
 
-        // Calculate in-degree by traversing all vertices
         for (const auto &v : g.getVertexSet()) {
             for (const auto &edge : v->getAdj()) {
                 if (edge.getDest() == vertex && edge.getAirline() == a) {
@@ -1264,13 +1256,11 @@ void Controller::topAirportsArrivals(Airline a){
         airportDegrees.emplace_back(vertex->getInfo(), inDegree);
     }
 
-    // Sort airports based on total degree in descending order
     sort(airportDegrees.begin(), airportDegrees.end(),
               [](const auto &a, const auto &b) {
                   return a.second > b.second;
               });
 
-    // Print the top X airports
     cout << "\n============ Top Airports ===========\n";
     for (int i = 0; i < min(x, static_cast<int>(airportDegrees.size())); ++i) {
         const Airport &airport = airportDegrees[i].first;
@@ -1291,16 +1281,14 @@ void Controller::hasFlight(Airline a) {
     cout << "Enter Destination Airport Code: ";
     cin >> destCode;
 
-    // Iterate through the flights vector and check for matches
     bool flightFound = false;
     for (const Flight& flight : flights) {
         if (flight.getSourceAirport().getCode() == sourceCode && flight.getTargetAirport().getCode() == destCode && flight.getAirline() == a) {
             flightFound = true;
-            break;  // Exit the loop as soon as a match is found
+            break;
         }
     }
 
-    // Check the result
     if (flightFound) {
         cout << "The airline has a flight from " << sourceCode << " to " << destCode << endl;
     } else {
@@ -1313,7 +1301,7 @@ void Controller::showDistance(Flight f) {
     cout << "\n=====================================\n";
 }
 double Controller::haversine(double lat1, double lon1, double lat2, double lon2) {
-    const double R = 6371.0; // Earth radius in kilometers
+    const double R = 6371.0;
     const double dLat = (lat2 - lat1) * (M_PI / 180.0);
     const double dLon = (lon2 - lon1) * (M_PI / 180.0);
 
@@ -1393,6 +1381,7 @@ void Controller::displayCredits() {
     cout << "Date: December 2023";
     cout << "\n=====================================\n";
 }
+
 
 
 

@@ -35,7 +35,14 @@
 #include "../include/Airport.h"
 #include "../include/Flight.h"
 #include "../include/CSVParser.h"
-
+namespace std {
+    template <>
+    struct hash<Airport> {
+        size_t operator()(const Airport& airport) const {
+            return hash<string>()(airport.getCode());
+        }
+    };
+}
 using namespace std;
 
 class Controller {
@@ -63,14 +70,15 @@ private:
     void addAirlineToHashTable(const Airline& airline) {
         airlineHashTable[airline.getCode()] = airline;
     }
+
     /// Simple Auxiliary Function for showFlights Function
     vector<Airport> BFSWithLayovers(const Airport& source, const Airport& destination, int maxLayovers);
     /// DFS Auxiliary Function for findLongestPath Function
     void findLongestPathDFS(Vertex<Airport>* currentVertex, vector<Airport>& currentRoute, int& maxStops, vector<Airport>& maxRoute);
     /// DFS Auxiliary for Articulation Points
     void ArticulationPointsDFS(Vertex<Airport>* currentVertex, set<Vertex<Airport>*>& articulationPoints, int& time, Vertex<Airport>* parent) const;
-    /// DFS Auxiliary for Longest Trip
-    void findLongestPathDFS(Vertex<Airport>* currentVertex, Airport destination,vector<Airport>& currentRoute,vector<pair<Airport, Airport>>& maxRoutePairs, int& maxStops);
+    /// Djikstra
+    vector<Airport> shortestPath(const Airport& source, const Airport& destination) const;
     /// Haversine Formula
     double haversine(double lat1, double lon1, double lat2, double lon2);
     /// Main Data Structure for the Program
@@ -98,10 +106,10 @@ public:
     void topAirports();
     /// Shows Articulation Points, meaning Airports that when removed create unreachable destinations
     ///  O(V + E)
-    void ArticulationPoints() const;
+    void articulationPoints() const;
     /// Shows Longest Flight Path Pair
     ///  O(V^2)
-    void findLongestPathPairs();
+    void findHighestStopsPairs() const;
     /// Calculates the Departing Flights Number from a given Airport
     ///  O(outgoing edges)
     void numDepartures(Airport a);
