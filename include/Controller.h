@@ -140,10 +140,10 @@ public:
     /// Shows the Number of Flights a given Airline flies to a chosen Airport
     ///  O(V * E)
     void numAirlineFlightsTo(Airline a);
-    /// Shows the Number of Flights a given Airline flies from a chosen Airport to a chosen Airport
+    /// Airports with Most Departures of this Airline
     ///  O(V * E)
     void topAirportsDepartures(Airline a);
-    /// Shows the Number of Flights a given Airline flies to a chosen Airport from a chosen Airport
+    /// Airports with Most Arrivals of this Airline
     ///  O(V * E)
     void topAirportsArrivals(Airline a);
     /// Tells if Airline has Certain Flight
