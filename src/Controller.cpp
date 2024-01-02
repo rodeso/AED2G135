@@ -162,7 +162,7 @@ void Controller::displayMenu() {
                     int contador = 1;
                     for (auto a: resA) {
                         cout << "                ";
-                        cout << contador << '-' << ' ' << a.getCode() << endl;
+                        cout << contador << ':' << ' ' << a.getCode() << endl;
                         contador++;
                     }
                     cout << "========== Choose a number ==========\n";
