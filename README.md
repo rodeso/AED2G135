@@ -9,7 +9,7 @@ Yet Another AirRoute Navigator (YAARN)
 - **Tools:** C++
 - **Institution:** [FEUP](https://sigarra.up.pt/feup/en/web_page.Inicial)
 - **Course:** [AED](https://sigarra.up.pt/feup/pt/UCURR_GERAL.FICHA_UC_VIEW?pv_ocorrencia_id=520316) (Algorithms and Data Structures)
-- **Project grade:** TBD
+- **Project grade:** 16.9
 - **Group members:**
     - Álvaro Tomas Teixeira Silva Pacheco (up202207733@up.pt)
     - André Pinto de Sousa (up202109775@up.pt)
